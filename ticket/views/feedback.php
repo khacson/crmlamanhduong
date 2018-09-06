@@ -33,9 +33,6 @@
 		</div>
 	</div>
 </div>
-<?php
-	//print_r($finds);
-?>
 <script>
 	$(function(){
 		initForm();

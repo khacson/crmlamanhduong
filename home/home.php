@@ -47,7 +47,7 @@ class Home extends CI_Controller {
 		$week = strftime("%d/%m/%Y", $week);
 		$data->todates = $dateNow;
 		$data->fromdates = $week;
-		$title_page = 'Quả lý bán hàng';
+		$title_page = getLanguage('quan-ly-khach-hang');
 		
 		$content = $this->load->view('view',$data,true);
 		$this->site->write('content',$content,true);

@@ -23,8 +23,21 @@ foreach ($datas as $key => $item) {
 		<td class="ticket_name"><?=$item->ticket_name;?></td>
 		<td class="priority_name text-center"><?=$priority_name;?></td>
 		<td class="ticket_description"><?=$item->ticket_description;?></td>
+		<td class="text-center">
+			<?php if(!empty($item->ticket_image)){
+				$arr_car_images = explode(';',$item->ticket_image);
+				foreach($arr_car_images as $key=>$val){
+					if(empty($val)){
+						continue;
+					}
+				?>
+				<img id="<?=$val;?>"  class="viewImg" width="50" height="40" src="<?=base_url();?>files/ticket/<?=$val;?>">
+			<?php }}?>
+		</td>
 		<td class="ticket_name text-center"><?=date('d/m/Y H:i:s',strtotime($item->datecreate));?></td>
 		<td class="usercreate"><?=$item->usercreate;?></td>
+		<td class="ticket_contat_name"><?=$item->ticket_contat_name;?></td>
+		<td class="ticket_contact_phone"><?=$item->ticket_contact_phone;?></td>
 		<td class="usercreate"><?=$item->customer_name;?></td>
 		<td></td>
 		<td></td>

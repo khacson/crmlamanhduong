@@ -14,6 +14,7 @@ class Ticket extends CI_Controller {
 		$this->route = $this->router->class;
 		$menus = $this->site->getSession('menus');
 		$this->title = $menus[$this->route];
+		$this->load->library('upload');
 	}
 	function _remap($method, $params = array()) {
         if (method_exists($this, $method)) {
@@ -129,17 +130,17 @@ class Ticket extends CI_Controller {
 		$tb = $this->base_model->loadTable();
 		$token =  $this->security->get_csrf_hash();
 		$permission = $this->base_model->getPermission($this->login, $this->route);
-		$length = $this->input->post('length');
 		if (!isset($permission['add'])){
 			$result['status'] = 0;
 			$result['csrfHash'] = $token;
 			echo json_encode($result); exit;	
 		}
 		$array = json_decode($this->input->post('search'),true);
+		$length = $this->input->post('length');
 		$login = $this->login;
 		$insert = array();
 		$ticket_image = '';
-		for($i=0;$i< $length1; $i++){
+		for($i=0;$i< $length; $i++){
 			if(isset($_FILES['ticket_image'.$i]) && $_FILES['ticket_image'.$i]['name'] != "") {
 				$imge_name = $_FILES['ticket_image'.$i]['name'];
 				$this->upload->initialize($this->set_upload_options());
@@ -172,8 +173,9 @@ class Ticket extends CI_Controller {
 			echo json_encode($result); exit;	
 		}
 		$array = json_decode($this->input->post('search'),true);
+		$length = $this->input->post('length');
 		$ticket_image = '';
-		for($i=0;$i< $length1; $i++){
+		for($i=0;$i< $length; $i++){
 			if(isset($_FILES['ticket_image'.$i]) && $_FILES['ticket_image'.$i]['name'] != "") {
 				$imge_name = $_FILES['ticket_image'.$i]['name'];
 				$this->upload->initialize($this->set_upload_options());

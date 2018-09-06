@@ -26,9 +26,29 @@
 	</div>
 	<div class="col-md-12 mtop10">
 		<div class="form-group">
-			<label class="control-label col-md-4"><?=getLanguage('mo-ta');?> (<span class="red">*</span>)</label>
+			<label class="control-label col-md-4"><?=getLanguage('noi-dung-yeu-cau');?> (<span class="red">*</span>)</label>
 			<div class="col-md-8">
 				<textarea name="input_ticket_description"  id="input_ticket_description" class="form-input form-control " ><?=$finds->ticket_description;?></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 mtop10">
+		<div class="form-group">
+			<label class="control-label col-md-4"><?=getLanguage('nguoi-lien-he');?></label>
+			<div class="col-md-8">
+				<input type="text" name="input_ticket_contat_name"  id="input_ticket_contat_name" class="form-input form-control " 
+				value="<?=$finds->ticket_contat_name;?>" placeholder=""
+				/>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 mtop10">
+		<div class="form-group">
+			<label class="control-label col-md-4"><?=getLanguage('dien-thoai');?></label>
+			<div class="col-md-8">
+				<input type="text" name="input_ticket_contact_phone"  id="input_ticket_contact_phone" class="form-input form-control " 
+				value="<?=$finds->ticket_contact_phone;?>" placeholder=""
+				/>
 			</div>
 		</div>
 	</div>
@@ -79,7 +99,7 @@
 	var listimg = {};
 	var storedOldNameFiles = [];
 	var storedFiles = [];
-	storedFiles
+	var replyResult = parseInt('<?=$finds->reply_result;?>'); 
 	$(function(){
 		initForm();
 		handleSelect2();
@@ -87,6 +107,12 @@
 	});
 	function initForm(){
 		$('#input_ticket_name').select();
+		if(replyResult != 0){//Nếu ticket đã phản hồi thì không được sửa
+			$('#actionSave').hide();
+		}
+		else{
+			$('#actionSave').show();
+		}
 	}
 	function ticket_image_picture() { 
         $('#ticket_image').change(function (evt) { 

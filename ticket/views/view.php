@@ -5,17 +5,22 @@
 	table col.c4 { width: 180px;}
 	table col.c5 { width: 110px;}
 	table col.c6 { width: 250px;}
-	table col.c7 { width: 100px;}
+	table col.c7 { width: 130px;}
 	table col.c8 { width: 120px;}
-	table col.c9 { width: 180px;}
+	table col.c9 { width: 120px;}
 	table col.c10 { width: 120px;}
-	table col.c11 { width: 250px;}
-	table col.c12 { width: 150px;}
-	table col.c13 { width: 250px;}
-	table col.c14 { width: 100px;}
-	table col.c15 { width: auto;}
+	table col.c11 { width: 120px;}
+	table col.c12 { width: 180px;}
+	table col.c13 { width: 120px;}
+	table col.c14 { width: 250px;}
+	table col.c15 { width: 150px;}
+	table col.c16 { width: 250px;}
+	table col.c17 { width: 100px;}
+	table col.c18 { width: auto;}
 	.col-md-4{ white-space: nowrap !important;}
 </style>
+<script type="text/javascript" src="<?=url_tmpl();?>fancybox/source/jquery.fancybox.pack.js"></script>  
+<link href="<?=url_tmpl();?>fancybox/source/jquery.fancybox.css" rel="stylesheet" />
 <div class="row">
 	<?=$this->load->inc('breadcrumb');?>
 </div>
@@ -73,7 +78,7 @@
 				<div id="cHeader">
 					<div id="tHeader">    	
 						<table id="tbheader" width="100%" cellspacing="0" border="1" >
-							<?php for($i=1; $i< 16; $i++){?>
+							<?php for($i=1; $i< 19; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr>							
@@ -82,9 +87,12 @@
 								<th id="ord_tk.ticket_code"><?=getLanguage('ma-yeu-cau')?></th>
 								<th id="ord_tk.ticket_name"><?=getLanguage('tieu-de')?></th>
 								<th id="ord_tk.priorityid"><?=getLanguage('do-uu-tien')?></th>
-								<th id="ord_tk.ticket_description"><?=getLanguage('noi-dung')?></th>
+								<th id="ord_tk.ticket_description"><?=getLanguage('noi-dung-yeu-cau')?></th>
+								<th><?=getLanguage('hinh-anh')?></th>
 								<th id="ord_tk.datecreate"><?=getLanguage('ngay-yeu-cau')?></th>
 								<th id="ord_tk.usercreate"><?=getLanguage('nguoi-yeu-cau')?></th>
+								<th id="ord_tk.ticket_contat_name"><?=getLanguage('nguoi-lien-he')?></th>
+								<th id="ord_tk.ticket_contact_phone"><?=getLanguage('dien-thoai')?></th>
 								<th id="ord_tk.customerid"><?=getLanguage('cong-ty')?></th>
 								<th id="ord_tk.reply_result"><?=getLanguage('trang-thai')?></th>
 								<th id="ord_tk.reply_description"><?=getLanguage('noi-dung-phan-hoi')?></th>
@@ -101,7 +109,7 @@
 				<div id="data">
 					<div id="gridView">
 						<table id="tbbody" width="100%" cellspacing="0" border="1">
-							<?php for($i=1; $i < 16; $i++){?>
+							<?php for($i=1; $i < 19; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr class="row-search">
@@ -123,16 +131,19 @@
 								<td>
 									<input type="text" name="ticket_description" id="ticket_description" class="searchs" />
 								</td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
 								<td>
-									<select id="reply_result" name="reply_result" class="combos" data-placeholder="<?=getLanguage('chon-hang-xe')?>">
+									<select id="reply_result" name="reply_result" class="combos">
 										<?php foreach($prioritys as $item){?>
 											<option value="<?=$item->id;?>"><?=$item->priority_name;?></option>
 										<?php }?>
 									</select>
 								</td>
-								<td></td>
-								<td></td>
-								<td></td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -195,6 +206,9 @@
   </div>
 </div>
 <!--E feedback -->
+<!-- view Img -->
+<div id="viewImg-form" style="display:none;"><div class=""><div id="viewImg-form-gridview" ></div></div></div>
+<!-- view Img -->
 <input type="hidden" name="id" id="id" />
 <script>
 	var controller = '<?=base_url().$routes;?>/';
@@ -403,10 +417,7 @@
     function funcList(obj){
 		$('.edit').each(function(e){
 			$(this).click(function(){ 
-				 var vehicleload_name = $('.vehicleload_name').eq(e).html().trim();
-				 var id = $(this).attr('id');
-				 $('#id').val(id);	
-				 $('#vehicleload_name').val(vehicleload_name);
+				
 			});
 		});	
 		$('.edititem').each(function(e){
@@ -428,6 +439,12 @@
 				loadFormFeedback(id);
 			});
 		});
+		$(".viewImg").each(function(e) {
+			$(this).click(function() {
+				var id = $(this).attr('id');
+				viewImg(id);
+			});
+		});
 	}
 	function refresh(){
 		$('.loading').show();
@@ -442,4 +459,19 @@
 		csrfHash = $('#token').val();
 		getList(0,csrfHash);	
 	}
+	function viewImg(url) {
+		$.fancybox({
+			'width': 600,
+			'height': 500,
+			'autoSize' : false,
+			'hideOnContentClick': true,
+			'enableEscapeButton': true,
+			'titleShow': true,
+			'href': "#viewImg-form",
+			'scrolling': 'no',
+			'afterShow': function(){
+				$('#viewImg-form-gridview').html('<img style="width:600px; height:500px;" src="<?=base_url();?>files/ticket/'+url+'" />');
+			}
+		});
+    }
 </script>
