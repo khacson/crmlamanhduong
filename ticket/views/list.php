@@ -12,6 +12,16 @@ foreach ($datas as $key => $item) {
 	else{
 		$priority_name = '<a class="btn btn-info" style="padding:0 3px;">'.$priority_name.'</a>';
 	}
+	//Tinh trang
+	if($item->reply_result == 2){
+		$reply_result = '<a class="btn btn-danger" style="padding:0 3px;">'.getLanguage('khong-xu-ly-duoc').'</a>';
+	}
+	elseif($item->reply_result == 0){
+		$reply_result = '<a class="btn btn-warning" style="padding:0 3px;">'.getLanguage('chua-xu-ly').'</a>';
+	}
+	else{
+		$reply_result = '<a class="btn btn-info" style="padding:0 3px;">'.getLanguage('da-xu-ly').'</a>';
+	}
 	?>
 	<tr class="edit" id="<?=$item->id;?>" >
 		
@@ -39,7 +49,7 @@ foreach ($datas as $key => $item) {
 		<td class="ticket_contat_name"><?=$item->ticket_contat_name;?></td>
 		<td class="ticket_contact_phone"><?=$item->ticket_contact_phone;?></td>
 		<td class="usercreate"><?=$item->customer_name;?></td>
-		<td></td>
+		<td class="text-center"><?=$reply_result;?></td>
 		<td></td>
 		<td></td>
 		<td></td>

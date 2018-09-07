@@ -31,6 +31,9 @@
 		if(!empty($search['priorityid'])){
 			$sql.= " and tk.priorityid in (".$search['priorityid'].") ";	
 		}
+		if($search['reply_result'] != ''){
+			$sql.= " and tk.reply_result in (".$search['reply_result'].") ";	
+		}
 		if(!empty($search['ticket_description'])){
 			$sql.= " and tk.ticket_description like '%".$search['ticket_description']."%' ";	
 		}

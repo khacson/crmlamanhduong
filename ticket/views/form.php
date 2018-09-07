@@ -65,7 +65,15 @@
 				<div class="col-md-9" >
 					 <div class="row">
 						 <span id="show_ticket_image">
-							<img height="50" src="" >
+							<?php if(!empty($finds->ticket_image)){
+								$arr_car_images = explode(';',$finds->ticket_image);
+								foreach($arr_car_images as $key=>$val){
+									if(empty($val)){
+										continue;
+									}
+								?>
+								<div class="oneimg newimg" name="<?=$val;?>"><img height="40" width="50" src="<?=base_url();?>files/ticket/<?=$val;?>" class="imgupload" /><div class="rmoneimg" id="<?=$finds->id;?>" file="<?=$val;?>"><i class="fa fa-times" aria-hidden="true"></i></div></div>
+							<?php }}?>
 						 </span> 
 					 </div>
 				</div>
@@ -147,6 +155,18 @@
             if ($(".oneimg").length === 0) {
                 $("#noimg").css("display", "");
             }
+			var id = $(this).attr('id');
+			var file = $(this).attr('file'); 
+			deleteImg(id,file)
         });
     }
+	function deleteImg(id,file){
+		$.ajax({
+			url : controller + 'deleteImg',
+			type: 'POST',
+			async: false,
+			data:{id:id,file:file},  
+			success:function(datas){}
+		});
+	}
 </script>

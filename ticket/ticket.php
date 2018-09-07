@@ -114,13 +114,23 @@ class Ticket extends CI_Controller {
 			echo json_encode($result); exit;	
 		}
 		$array = json_decode($this->input->post('search'),true);
+		$length = $this->input->post('length');
 		$login = $this->login;
 		$array['datecreate']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 		$array['ticket_code'] = randCode();
 		$array['usercreate'] = $this->login->username;
-		$result['status'] =$this->model->saves($array);
 		$array['customerid'] = $login->customerid;
-		
+		$ticket_image = '';
+		for($i=0;$i< $length; $i++){
+			if(isset($_FILES['ticket_image'.$i]) && $_FILES['ticket_image'.$i]['name'] != "") {
+				$imge_name = $_FILES['ticket_image'.$i]['name'];
+				$this->upload->initialize($this->set_upload_options());
+				$image_data = $this->upload->do_upload('ticket_image'.$i, $imge_name); //Ten hinh 
+				$ticket_image.= $image_data.';';	
+			}
+		}
+		$array['ticket_image']  = $ticket_image;
+		$result['status'] =$this->model->saves($array);
 		$description = getLanguage('them-moi').': '.$array['ticket_code'];
 		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),'','',$description);
 		$result['csrfHash'] = $token;
@@ -172,6 +182,8 @@ class Ticket extends CI_Controller {
 			$result['csrfHash'] = $token;
 			echo json_encode($result); exit;	
 		}
+		$id = $this->input->post('id');
+		$acction_before = $this->model->findID($id);
 		$array = json_decode($this->input->post('search'),true);
 		$length = $this->input->post('length');
 		$ticket_image = '';
@@ -184,9 +196,8 @@ class Ticket extends CI_Controller {
 			}
 		}
 		if(!empty($ticket_image)){
-			$array['ticket_image']  = $ticket_image;
+			$array['ticket_image']  = ($acction_before->ticket_image).$ticket_image;
 		}
-		$id = $this->input->post('id');
 		$login = $this->login;
 		$acction_before = $this->model->findID($id);
 		$array['dateupdate']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
@@ -235,6 +246,29 @@ class Ticket extends CI_Controller {
 		$result['status'] = 1;	
 		$result['csrfHash'] = $token;
 		echo json_encode($result);
+	}
+	function deleteImg(){
+		$id = $this->input->post('id');
+		$fileName = $this->input->post('file');
+		$tb = $this->base_model->loadTable();
+		$find = $this->model->table($tb['crmd_ticket'])
+					  ->select('id,ticket_image')
+					  ->where('id',$id)
+					  ->where('reply_result',0)
+					  ->find();
+		$ticket_image = $find->ticket_image;
+		if(empty($ticket_image)){
+			echo 0;
+		}
+		else{
+			$ticket_image = $find->ticket_image;
+			$arr_car_images = array_flip(explode(';',$ticket_image));
+			if(isset($arr_car_images[$fileName])){
+				unset($arr_car_images[$fileName]);
+			}
+			$listImg = implode(';',array_flip($arr_car_images));
+			$this->model->table($tb['crmd_ticket'])->where('id',$id)->update(array('ticket_image'=>$listImg));
+		}
 	}
 	private function set_upload_options() {
         $config = array();

@@ -11,7 +11,7 @@
 	table col.c10 { width: 120px;}
 	table col.c11 { width: 120px;}
 	table col.c12 { width: 180px;}
-	table col.c13 { width: 120px;}
+	table col.c13 { width: 130px;}
 	table col.c14 { width: 250px;}
 	table col.c15 { width: 150px;}
 	table col.c16 { width: 250px;}
@@ -83,19 +83,19 @@
 							<?php }?>
 							<tr>							
 								<th><input type="checkbox" name="checkAll" id="checkAll" /></th>
-								<th><?=getLanguage('stt')?></th>								
-								<th id="ord_tk.ticket_code"><?=getLanguage('ma-yeu-cau')?></th>
-								<th id="ord_tk.ticket_name"><?=getLanguage('tieu-de')?></th>
-								<th id="ord_tk.priorityid"><?=getLanguage('do-uu-tien')?></th>
-								<th id="ord_tk.ticket_description"><?=getLanguage('noi-dung-yeu-cau')?></th>
-								<th><?=getLanguage('hinh-anh')?></th>
-								<th id="ord_tk.datecreate"><?=getLanguage('ngay-yeu-cau')?></th>
-								<th id="ord_tk.usercreate"><?=getLanguage('nguoi-yeu-cau')?></th>
-								<th id="ord_tk.ticket_contat_name"><?=getLanguage('nguoi-lien-he')?></th>
-								<th id="ord_tk.ticket_contact_phone"><?=getLanguage('dien-thoai')?></th>
-								<th id="ord_tk.customerid"><?=getLanguage('cong-ty')?></th>
-								<th id="ord_tk.reply_result"><?=getLanguage('trang-thai')?></th>
-								<th id="ord_tk.reply_description"><?=getLanguage('noi-dung-phan-hoi')?></th>
+								<th><?=getLanguage('stt');?></th>								
+								<th id="ord_tk.ticket_code"><?=getLanguage('ma-yeu-cau');?></th>
+								<th id="ord_tk.ticket_name"><?=getLanguage('tieu-de');?></th>
+								<th id="ord_tk.priorityid"><?=getLanguage('do-uu-tien');?></th>
+								<th id="ord_tk.ticket_description"><?=getLanguage('noi-dung-yeu-cau');?></th>
+								<th><?=getLanguage('hinh-anh');?></th>
+								<th id="ord_tk.datecreate"><?=getLanguage('ngay-yeu-cau');?></th>
+								<th id="ord_tk.usercreate"><?=getLanguage('nguoi-yeu-cau');?></th>
+								<th id="ord_tk.ticket_contat_name"><?=getLanguage('nguoi-lien-he');?></th>
+								<th id="ord_tk.ticket_contact_phone"><?=getLanguage('dien-thoai');?></th>
+								<th id="ord_tk.customerid"><?=getLanguage('cong-ty');?></th>
+								<th id="ord_tk.reply_result"><?=getLanguage('trang-thai');?></th>
+								<th id="ord_tk.reply_description"><?=getLanguage('noi-dung-phan-hoi');?></th>
 								<th><?=getLanguage('phan-hoi-khach-hang')?></th>
 								<th><?=getLanguage('noi-dung-phan-hoi-khach-hang')?></th>
 								<th></th>
@@ -139,9 +139,9 @@
 								<td></td>
 								<td>
 									<select id="reply_result" name="reply_result" class="combos">
-										<?php foreach($prioritys as $item){?>
-											<option value="<?=$item->id;?>"><?=$item->priority_name;?></option>
-										<?php }?>
+										<option value="0">Chưa xử lý</option>
+										<option value="1">Đã xữ lý</option>
+										<option value="2">Không xử lý được</option>
 									</select>
 								</td>
 								<td></td>
@@ -407,7 +407,7 @@
 		$('#reply_result').multipleSelect({
 			filter: true,
 			single: false,
-			placeholder: 'Chọn kết quả phản hồi',
+			placeholder: 'Chọn trạng thái',
 			onClick: function(view){
 				searchList();
 			}
