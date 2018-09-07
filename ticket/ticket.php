@@ -26,8 +26,14 @@ class Ticket extends CI_Controller {
 		$data = new stdClass();
 		$permission = $this->base_model->getPermission($this->login, $this->route);
 		if (!isset($permission['view'])) {
-	    	//redirect('authorize');
+	    	redirect('authorize');
 	    }
+		$dateNow =  gmdate("d-m-Y", time() + 7 * 3600); 
+		$week = strtotime(date("d-m-Y", strtotime($dateNow))." -1 week"); 
+		$week = strftime("%d/%m/%Y", $week);
+		$data->todates = $dateNow;
+		$data->fromdates = $week;
+		
 	    $data->permission = $permission;
 		$data->csrfName = $this->security->get_csrf_token_name();
 		$data->csrfHash = $this->security->get_csrf_hash();		
@@ -56,6 +62,7 @@ class Ticket extends CI_Controller {
 		else{
 			$result->title = getLanguage('sua');
 		}
+		$data->permission = $this->base_model->getPermission($this->login, $this->route);
 		$data->prioritys = $this->base_model->getPriority();
 		$data->companyid = $login->companyid;
         $result->content = $this->load->view('form', $data, true);
@@ -93,7 +100,8 @@ class Ticket extends CI_Controller {
 		$result = new stdClass();
 		$query = $this->model->getList($searchs,$page,$rows);
 		$count = $this->model->getTotal($searchs);
-		$data->datas = $query;
+		$data->datas = $query['datas'];
+		$data->feedback = $query['feedback'];
 		$data->start = $start;
 		$data->permission = $this->base_model->getPermission($this->login, $this->route);
 		
@@ -146,19 +154,8 @@ class Ticket extends CI_Controller {
 			echo json_encode($result); exit;	
 		}
 		$array = json_decode($this->input->post('search'),true);
-		$length = $this->input->post('length');
 		$login = $this->login;
 		$insert = array();
-		$ticket_image = '';
-		for($i=0;$i< $length; $i++){
-			if(isset($_FILES['ticket_image'.$i]) && $_FILES['ticket_image'.$i]['name'] != "") {
-				$imge_name = $_FILES['ticket_image'.$i]['name'];
-				$this->upload->initialize($this->set_upload_options());
-				$image_data = $this->upload->do_upload('ticket_image'.$i, $imge_name); //Ten hinh 
-				$ticket_image.= $image_data.';';	
-			}
-		}
-		$array['ticket_image']  = $ticket_image;
 		
 		$insert['datecreate']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 		$insert['usercreate'] = $this->login->username;
@@ -183,7 +180,7 @@ class Ticket extends CI_Controller {
 			echo json_encode($result); exit;	
 		}
 		$id = $this->input->post('id');
-		$acction_before = $this->model->findID($id);
+		$acction_before = $this->model->findID($id); 
 		$array = json_decode($this->input->post('search'),true);
 		$length = $this->input->post('length');
 		$ticket_image = '';
@@ -199,12 +196,40 @@ class Ticket extends CI_Controller {
 			$array['ticket_image']  = ($acction_before->ticket_image).$ticket_image;
 		}
 		$login = $this->login;
-		$acction_before = $this->model->findID($id);
 		$array['dateupdate']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 		$array['userupdate'] = $this->login->username;
 		$result['status'] =$this->model->edits($array,$id);
 		$arr_log['func'] = $this->uri->segment(2);
 		$description = getLanguage('sua').': '.$acction_before->ticket_code;
+		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),json_encode($acction_before),json_encode($array),$description);
+		
+		$result['csrfHash'] = $token;
+		echo json_encode($result);
+	}
+	function saveAnswer() {
+		$token =  $this->security->get_csrf_hash();
+		$permission = $this->base_model->getPermission($this->login, $this->route);
+		if (!isset($permission['answer'])){
+			$result['status'] = 0;
+			$result['csrfHash'] = $token;
+			echo json_encode($result); exit;	
+		}
+		$id = $this->input->post('id');
+		$acction_before = $this->model->findID($id);
+		$array = json_decode($this->input->post('search'),true);
+		$length = $this->input->post('length');
+		
+		$login = $this->login;
+		$arrays = array();
+		$arrays['reply_datetime']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
+		$arrays['reply_username'] = $this->login->username;
+		$arrays['reply_status'] = $array['reply_status'];
+		$arrays['reply_result'] = $array['reply_result'];
+		$arrays['reply_description'] = $array['reply_description'];
+		$arrays['ticket_code'] = $acction_before->ticket_code;
+		$result['status'] = $this->model->edits($arrays,$id);
+		$arr_log['func'] = $this->uri->segment(2);
+		$description = getLanguage('tra-loi').': '.$acction_before->ticket_code;
 		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),json_encode($acction_before),json_encode($array),$description);
 		
 		$result['csrfHash'] = $token;

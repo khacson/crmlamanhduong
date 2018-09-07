@@ -15,7 +15,7 @@
 					  ->where('id',$id)
 					  ->find();
 		return $query;
-	 }
+	}
 	function getSearch($search){
 		$sql = "";
 		$companyid = $this->login->companyid;
@@ -34,8 +34,24 @@
 		if($search['reply_result'] != ''){
 			$sql.= " and tk.reply_result in (".$search['reply_result'].") ";	
 		}
+		if($search['reply_status'] != ''){
+			$sql.= " and tk.reply_status in (".$search['reply_status'].") ";	
+		}
 		if(!empty($search['ticket_description'])){
 			$sql.= " and tk.ticket_description like '%".$search['ticket_description']."%' ";	
+		}
+		if(!empty($search['ticket_contat_name'])){
+			$sql.= " and tk.ticket_contat_name like '%".$search['ticket_contat_name']."%' ";	
+		}
+		if(!empty($search['ticket_contact_phone'])){
+			$sql.= " and tk.ticket_contact_phone like '%".$search['ticket_contact_phone']."%' ";	
+		}
+		if(!empty($search['datecreate'])){
+			$arrdate = explode ('-',$search['datecreate']);
+			$formdate = fmDateSave(trim($arrdate[0]));
+			$todate = fmDateSave(trim($arrdate[1]));
+			$sql.= " and tk.datecreate >= '".fmDateSave($formdate)." 00:00:00' ";	
+			$sql.= " and tk.datecreate <= '".fmDateSave($todate)." 23:59:59' ";	
 		}
 		return $sql;
 	}
@@ -50,14 +66,30 @@
 				$searchs
 				";
 		if(empty($search['order'])){
-			$sql.= ' ORDER BY tk.datecreate asc, tk.priorityid asc';
+			$sql.= ' ORDER BY tk.datecreate asc,tk.reply_result asc, tk.priorityid asc';
 		}
 		else{
 			$sql.= ' ORDER BY '.$search['order'].' '.$search['index'].' ';
 		}
 		$sql.= ' limit '.$page.','.$rows;
 		$query = $this->model->query($sql)->execute();
-		return $query;
+		//$feedback
+		$listID = '0';
+		foreach($query as $item){
+			$listID.= ','.$item->id; 
+		}
+		$feedback = $this->model->table($tb['crmd_ticket_feedback'])
+								->where("ticket_id in ($listID)")
+								->order_by('datecreate')
+								->find_all();
+		$arrFeedback = array();
+		foreach($feedback as $item){
+			$arrFeedback[$item->ticket_id][$item->id] = $item;
+		}
+		$array = array();
+		$array['datas'] = $query;
+		$array['feedback'] = $arrFeedback;
+		return $array;
 	}
 	function getTotal($search){
 		$tb = $this->base_model->loadTable();
@@ -91,6 +123,7 @@
 		 ->where('isdelete',0)
 		 ->where('id <>',$id)
 		 ->where('ticket_code',$array['ticket_code'])
+		 ->where('reply_status',1)
 		 ->find();
 		 if(!empty($check->id)){
 			 return -1;	

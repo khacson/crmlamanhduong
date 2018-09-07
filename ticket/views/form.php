@@ -80,6 +80,39 @@
 			</div>
 		</div>
 	</div>
+	<?php if(isset($permission['answer'])){?>
+	<div class="col-md-12 mtop10" style="border-top:1px dashed; padding-top:10px !important;">
+		<div class="form-group">
+			<label class="control-label col-md-4"><?=getLanguage('tinh-trang');?> Ticket</label>
+			<div class="col-md-8">
+				<select id="input_reply_status" name="input_reply_status" class="combos-input select2me form-control" data-placeholder="<?=getLanguage('chon-tinh-trang')?>">
+					<option <?php if(1 == $finds->reply_status){ echo 'selected';}?> value="1"><?=getLanguage('mo');?></option>
+					<option <?php if(2 == $finds->reply_status){ echo 'selected';}?> value="2"><?=getLanguage('dong');?></option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 mtop10">
+		<div class="form-group">
+			<label class="control-label col-md-4"><?=getLanguage('trang-thai');?> </label>
+			<div class="col-md-8">
+				<select id="input_reply_result" name="input_reply_result" class="combos-input select2me form-control" data-placeholder="<?=getLanguage('chon-trang-thai')?>">
+					<option <?php if(0 == $finds->reply_result){ echo 'selected';}?> value="0"><?=getLanguage('chua-xu-ly');?></option>
+					<option <?php if(1 == $finds->reply_result){ echo 'selected';}?> value="1"><?=getLanguage('da-xu-ly');?></option>
+					<option <?php if(2 == $finds->reply_result){ echo 'selected';}?> value="2"><?=getLanguage('khong-xu-ly-duoc');?></option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 mtop10">
+		<div class="form-group">
+			<label class="control-label col-md-4"><?=getLanguage('ghi-chu');?></label>
+			<div class="col-md-8">
+				<textarea name="input_reply_description"  id="input_reply_description" class="form-input form-control " ><?=$finds->reply_description;?></textarea>
+			</div>
+		</div>
+	</div>
+	<?php }?>
 </div>
 <style>
 	.oneimg{
@@ -107,7 +140,7 @@
 	var listimg = {};
 	var storedOldNameFiles = [];
 	var storedFiles = [];
-	var replyResult = parseInt('<?=$finds->reply_result;?>'); 
+	var replyStatus = parseInt('<?=$finds->reply_status;?>'); 
 	$(function(){
 		initForm();
 		handleSelect2();
@@ -115,12 +148,17 @@
 	});
 	function initForm(){
 		$('#input_ticket_name').select();
-		if(replyResult != 0){//Nếu ticket đã phản hồi thì không được sửa
+		if(replyStatus == 2){//Nếu ticket đã phản hồi thì không được sửa
 			$('#actionSave').hide();
+			$('#actionSave2').hide();
 		}
 		else{
 			$('#actionSave').show();
+			$('#actionSave2').show();
 		}
+		<?php if(!isset($permission['edit'])){?>
+			$('#actionSave').hide();
+		<?php }?>
 	}
 	function ticket_image_picture() { 
         $('#ticket_image').change(function (evt) { 

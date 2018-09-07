@@ -12,7 +12,7 @@
 	table col.c11 { width: 120px;}
 	table col.c12 { width: 180px;}
 	table col.c13 { width: 130px;}
-	table col.c14 { width: 250px;}
+	table col.c14 { width: 120px;}
 	table col.c15 { width: 150px;}
 	table col.c16 { width: 250px;}
 	table col.c17 { width: 100px;}
@@ -21,13 +21,17 @@
 </style>
 <script type="text/javascript" src="<?=url_tmpl();?>fancybox/source/jquery.fancybox.pack.js"></script>  
 <link href="<?=url_tmpl();?>fancybox/source/jquery.fancybox.css" rel="stylesheet" />
+<link type="text/css" href="<?=url_tmpl();?>css/daterangepicker.css"  rel="stylesheet">	
+<script type="text/javascript" src="<?=url_tmpl();?>js/moment.js"></script>
+<script type="text/javascript" src="<?=url_tmpl();?>js/daterangepicker.js"></script>
+
 <div class="row">
 	<?=$this->load->inc('breadcrumb');?>
 </div>
 <div class="portlet box blue mtop0">
 	<div class="portlet-title">
 		<div class="caption caption2">
-			 <div class="brc mtop3"><i class="fa fa-bars"></i> <?=getLanguage('tim-thay');?> <span class="semi-bold viewtotal">0</span> <?=getLanguage('trong-tai');?></div>			
+			 <div class="brc mtop3"><i class="fa fa-bars"></i> <?=getLanguage('tim-thay');?> <span class="semi-bold viewtotal">0</span> <?=getLanguage('ticket');?></div>			
 		</div>
 		<div class="tools">
 			<ul class="button-group pull-right" style="margin-top:-5px; margin-bottom:5px;">
@@ -95,9 +99,9 @@
 								<th id="ord_tk.ticket_contact_phone"><?=getLanguage('dien-thoai');?></th>
 								<th id="ord_tk.customerid"><?=getLanguage('cong-ty');?></th>
 								<th id="ord_tk.reply_result"><?=getLanguage('trang-thai');?></th>
-								<th id="ord_tk.reply_description"><?=getLanguage('noi-dung-phan-hoi');?></th>
+								<th id="ord_tk.reply_status"><?=getLanguage('tinh-trang');?> Ticket</th>
+								<th id="ord_tk.reply_description"><?=getLanguage('ghi-chu');?></th>
 								<th><?=getLanguage('phan-hoi-khach-hang')?></th>
-								<th><?=getLanguage('noi-dung-phan-hoi-khach-hang')?></th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -132,10 +136,21 @@
 									<input type="text" name="ticket_description" id="ticket_description" class="searchs" />
 								</td>
 								<td></td>
+								<td>
+									<div class="col-md-12" data-date-format="dd/mm/yyyy" style="display:inline-flex; padding-left:0; padding-right:25px;">
+										<input style="float:left; text-align:center;" placeholder="Chọn ngày" type="text" id="datecreate" placeholder="dd/mm/yyyy" name="datecreate" class="form-control searchs" value="" >
+										<span class="input-group-btn" >
+											<button class="btn default btn-picker datecreateClick" type="button"><i class="fa fa-calendar "></i></button>
+										</span>
+									</div>
+								</td>
 								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
+								<td>
+									<input type="text" name="ticket_contat_name" id="ticket_contat_name" class="searchs" />
+								</td>
+								<td>
+									<input type="text" name="ticket_contact_phone" id="ticket_contact_phone" class="searchs" />
+								</td>
 								<td></td>
 								<td>
 									<select id="reply_result" name="reply_result" class="combos">
@@ -144,7 +159,12 @@
 										<option value="2">Không xử lý được</option>
 									</select>
 								</td>
-								<td></td>
+								<td>
+									<select id="reply_status" name="reply_status" class="combos">
+										<option value="1">Mở</option>
+										<option value="2">Đóng</option>
+									</select>
+								</td>
 								<td></td>
 								<td></td>
 								<td></td>
@@ -182,6 +202,7 @@
       </div>
       <div class="modal-footer">
 		 <button id="actionSave" type="button" class="btn btn-info" ><i class="fa fa-save" aria-hidden="true"></i>  <?=getLanguage('luu');?></button>
+		  <button id="actionSave2" type="button" class="btn btn-info" ><i class="fa fa-save" aria-hidden="true"></i>  <?=getLanguage('tra-loi');?></button>
         <button id="close" type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> <?=getLanguage('dong');?></button>
       </div>
     </div>
@@ -254,15 +275,66 @@
 		$('#actionSave').click(function(){
 			save();
 		});	
+		$('#actionSave2').click(function(){
+			saveAnswer();
+		});	
 		$('#actionSaveFeedback').click(function(){
 			actionSaveFeedback();
 		});	
+		$('#datecreate').daterangepicker({
+			 locale: {
+			  format: 'DD/MM/YYYY'
+			},
+			startDate: '<?=$fromdates;?>',
+			endDate: '<?=$todates;?>',
+			timePicker: false,
+        	timePickerIncrement: 8,
+        	showDropdowns: true
+			
+		});
+		$('.datecreateClick').click(function(){
+			$('#datecreate').click();
+		});
 		searchFunction();
 	});
 	function searchFunction(){
-		$("#ticket_code,#ticket_name,#ticket_description").keyup(function() {
+		$("#ticket_code,#ticket_name,#ticket_description,#ticket_contat_name,#ticket_contat_name").keyup(function() {
 			searchList();	
-		});priorityid
+		});
+		$('.datecreateClick').click(function(){
+			searchList();
+		});
+	}
+	function saveAnswer(){
+		var id = $('#id').val(); 
+		var func = 'saveAnswer';
+		var search = getFormInput();
+		var obj = $.evalJSON(search); 
+		
+		var token = $('#token').val();
+		$('.loading').show();
+		$.ajax({
+			url : controller + func,
+			type: 'POST',
+			async: false,
+			data: {id:id,search:search},
+			success:function(datas){
+				var obj = $.evalJSON(datas); 
+				$("#token").val(obj.csrfHash);
+				$('.loading').hide();
+				if(obj.status == 0){
+					error("Trả lời không thành công."); return false;	
+				}
+				else{
+					success("Trả lời thành công"); 
+					refresh();
+				}
+			},
+			error : function(){
+				$('.loading').hide();
+				error("Trả lời không thành công."); return false;	
+			}
+		});
 	}
 	function loadForm(id){
 		$.ajax({
@@ -412,7 +484,14 @@
 				searchList();
 			}
 		});
-		
+		$('#reply_status').multipleSelect({
+			filter: true,
+			single: false,
+			placeholder: 'Chọn tình trạng ticket',
+			onClick: function(view){
+				searchList();
+			}
+		});
 	}
     function funcList(obj){
 		$('.edit').each(function(e){
