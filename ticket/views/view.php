@@ -70,7 +70,13 @@
 						<?=getLanguage('xoa')?>
 					</button>
 				</li>
-				<?php } ?>
+				<?php }?>
+				<li id="export" data-toggle="modal" data-target="#myModalFromPay">
+					<button class="button">
+						<i class="fa fa-file-excel-o"></i>
+						<?=getLanguage('export')?>
+					</button>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -294,6 +300,9 @@
 		});
 		$('.datecreateClick').click(function(){
 			$('#datecreate').click();
+		});
+		$('#export').click(function(){
+			window.location = controller + 'export?search='+getSearch();
 		});
 		searchFunction();
 	});

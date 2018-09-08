@@ -304,4 +304,100 @@ class Ticket extends CI_Controller {
         //$config['max_size'] = 0024;
         return $config;
     }
+	function export(){
+		$login = $this->login;
+		$search = $_GET['search'];
+		$searchs = json_decode($search,true);
+		$query = $this->model->getList($searchs,0,0);
+
+		include(APPPATH . 'libraries/excel2013/PHPExcel/IOFactory' . EXT);
+        $fileName = APPPATH . 'Template/ticket.xls';
+        $versionExcel = 'Excel5';
+        $inputFileType = PHPExcel_IOFactory::identify($fileName);
+        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+        $objPHPExcel = $objReader->load($fileName);
+        $sheetIndex = $objPHPExcel->setActiveSheetIndex(0);
+        $sheetIndex->setTitle('Report');
+        $sheetIndex->getDefaultStyle()->getFont()
+                ->setName('Times New Roman')
+                ->setSize(12);
+				
+		$datas = $query['datas'];
+		$feedback = $query['feedback'];
+		//Header
+		$sheetIndex->setCellValueByColumnAndRow(0,1,getLanguage('stt'));	
+		$sheetIndex->setCellValueByColumnAndRow(1,1,getLanguage('ma-yeu-cau'));
+		$sheetIndex->setCellValueByColumnAndRow(2,1,getLanguage('tieu-de'));
+		$sheetIndex->setCellValueByColumnAndRow(3,1,getLanguage('do-uu-tien'));
+		$sheetIndex->setCellValueByColumnAndRow(4,1,getLanguage('noi-dung-yeu-cau'));
+		$sheetIndex->setCellValueByColumnAndRow(5,1,getLanguage('ngay-yeu-cau'));
+		$sheetIndex->setCellValueByColumnAndRow(6,1,getLanguage('nguoi-yeu-cau'));
+		$sheetIndex->setCellValueByColumnAndRow(7,1,getLanguage('nguoi-lien-he'));
+		$sheetIndex->setCellValueByColumnAndRow(8,1,getLanguage('dien-thoai'));
+		$sheetIndex->setCellValueByColumnAndRow(9,1,getLanguage('cong-ty'));
+		$sheetIndex->setCellValueByColumnAndRow(10,1,getLanguage('trang-thai'));
+		$sheetIndex->setCellValueByColumnAndRow(11,1,getLanguage('tinh-trang')).' Ticket';
+		$sheetIndex->setCellValueByColumnAndRow(12,1,getLanguage('ghi-chu'));
+		$sheetIndex->setCellValueByColumnAndRow(13,1,getLanguage('phan-hoi-khach-hang'));
+			
+		$i= 2; 
+		foreach ($datas as $item) { 
+			$id = $item->id;
+			$priority_name = $item->priority_name;
+			//Tinh trang
+			if($item->reply_result == 2){
+				$reply_result = getLanguage('khong-xu-ly-duoc');
+			}
+			elseif($item->reply_result == 0){
+				$reply_result = getLanguage('chua-xu-ly');
+			}
+			else{
+				$reply_result = getLanguage('da-xu-ly');
+			}
+			$reply_status = '';
+			if($item->reply_status == 1){
+				$reply_status = getLanguage('mo');
+			}
+			elseif($item->reply_status == 2){
+				$reply_status = getLanguage('dong');
+			}
+			$str = '';
+			if(isset($feedback[$item->id])){
+				$feedbacks = $feedback[$item->id];
+				foreach($feedbacks as $kk=>$items){
+					$feedback_status = '';
+					if($items->feedback_status == 1){
+						$feedback_status = getLanguage('hai-long');
+					}
+					elseif($items->feedback_status == 2){
+						$feedback_status = getLanguage('chua-hai-long');
+					}
+					$str.= "- ".$feedback_status. ' "'.$items->feedback_content .' '.date("d/m/Y H:i:s",strtotime($item->datecreate)) .'"';
+				}
+			}
+				
+			$sheetIndex->setCellValueByColumnAndRow(0,$i,$i-1);	
+			$sheetIndex->setCellValueByColumnAndRow(1,$i,$item->ticket_code);
+			$sheetIndex->setCellValueByColumnAndRow(2,$i,$item->ticket_name);
+			$sheetIndex->setCellValueByColumnAndRow(3,$i,$priority_name);
+			$sheetIndex->setCellValueByColumnAndRow(4,$i,$item->ticket_description);
+			$sheetIndex->setCellValueByColumnAndRow(5,$i,date('d/m/Y H:i:s',strtotime($item->datecreate)));
+			$sheetIndex->setCellValueByColumnAndRow(6,$i,$item->usercreate);
+			$sheetIndex->setCellValueByColumnAndRow(7,$i,$item->ticket_contat_name);
+			$sheetIndex->setCellValueByColumnAndRow(8,$i,$item->ticket_contact_phone);
+			$sheetIndex->setCellValueByColumnAndRow(9,$i,$item->customer_name);
+			$sheetIndex->setCellValueByColumnAndRow(10,$i,$reply_result);
+			$sheetIndex->setCellValueByColumnAndRow(11,$i,$reply_status);
+			$sheetIndex->setCellValueByColumnAndRow(12,$i,$item->reply_description);
+			$sheetIndex->setCellValueByColumnAndRow(13,$i,$str);
+			$i++;
+		}
+		$boderthin = "A2:N".($i-1); 
+		$sheetIndex->getStyle($boderthin)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		#end
+		$objPHPExcel->setActiveSheetIndex(0);
+		$date = gmdate("dmYHis", time() + 7 * 3600);
+		//$endxls = '.xls';
+        $this->excel_model->exportExcel($objPHPExcel, $versionExcel, "ticket_".$date.'.xls');
+	}
 }
