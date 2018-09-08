@@ -1,37 +1,26 @@
 
 <?php 	$i = $start;
 foreach ($datas as $key => $item){
-	$expirationdate = '';
-	if($item->expirationdate != '0000-00-00' && !empty($item->expirationdate)){
-		$expirationdate = date(cfdate(),strtotime($item->expirationdate));
+	$ticket_date_expired = '';
+	if($item->ticket_date_expired != '0000-00-00' && !empty($item->ticket_date_expired)){
+		$ticket_date_expired = date(cfdate(),strtotime($item->ticket_date_expired));
 	}
 	$id = $item->id;
 	?>
-	<tr class="content edit" supplierid="<?=$item->supplierid;?>" id="<?=$item->id;?>" 
-	
-	>
-		
+	<tr class="content edit" customerid="<?=$item->customerid;?>" id="<?=$item->id;?>">	
 		<td class="text-center">
 			<input id="<?=$item->id;?>" class="noClick" type="checkbox" value="<?=$item->id; ?>" name="keys[]">
 		</td>
 		<td class="text-center"><?=$i;?></td>
-		<td class="supplier_name"><?=$item->supplier_name;?></td>
-		<td class="pnk">
-			<a id="<?=$item->orderid;?>" href="#" class="itemView fright" data-toggle="modal" data-target="#myModalFromCN">
-				<?=$item->pnk;?> <i class="fa fa-question-circle-o" aria-hidden="true"></i>
-			</a>
+		<td class="customer_name"><?=$item->customer_name;?></td>
+		<td class="ticket_code">
+			<?=$item->ticket_code;?>
 		</td>
-		<td class="price text-right"><?=fmNumber($item->price);?></td>
-		<td class="amount_debt text-right"><?=fmNumber($item->amount_debt);?></td>
+		<td class="ticket_price text-right"><?=fmNumber($item->ticket_price);?></td>
 		<td class="text-right"><?=fmNumber($item->da_thanh_toan);?></td>
-		<td class="text-right"><?=fmNumber(($item->amount_debt) - ($item->da_thanh_toan));?></td>
-		<td class="expirationdate"><?=$expirationdate;?></td>
-		<td class="description"><?=$item->description?></td>
-		<td class="text-left">
-			<a id="<?=$item->orderid;?>" class="btn btn-info itemView" href="#" data-toggle="modal" data-target="#myModalFromCN">
-				<i class="fa fa-eye" aria-hidden="true"></i>
-			</a>
-		</td>
+		<td class="text-right"><?=fmNumber(($item->ticket_price) - ($item->da_thanh_toan));?></td>
+		<td class="ticket_date_expired"><?=$ticket_date_expired;?></td>
+		<td class="ticket_description_pay"><?=$item->ticket_description_pay?></td>
 		<td></td>
 	</tr>
 

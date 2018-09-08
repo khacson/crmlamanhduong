@@ -48,19 +48,14 @@ class Pay extends CI_Controller {
 		$find = $this->model->findID($id);
 		if(empty($find->id)){
 			$tb = $this->base_model->loadTable();
-			$find = $this->base_model->getColumns($tb['hotel_liabilities_buy_buy']);
+			$find = $this->base_model->getColumns($tb['crmd_ticket_buy']);
 		}
 		$data = new stdClass();
         $result = new stdClass();
 		$data->finds = $find;  
-		if(empty($id)){
-			$result->title = getLanguage('them-moi');
-		}
-		else{
-			$result->title = getLanguage('sua');
-		}
+		$result->title = getLanguage('ticket').': '.$find->ticket_code;
 		$data->title = $result->title;
-		$data->suppliers = $this->base_model->getSupplier('');
+		$data->customers = $this->base_model->getCustomer('');
 		$data->branchid = $login->branchid;
         $result->content = $this->load->view('form', $data, true);
 		$result->id = $id;
@@ -72,7 +67,7 @@ class Pay extends CI_Controller {
 		$find = $this->model->findID($id);
 		$tb = $this->base_model->loadTable();
 		if(empty($find->id)){
-			$find = $this->base_model->getColumns($tb['hotel_liabilities_buy']);
+			$find = $this->base_model->getColumns($tb['crmd_ticket']);
 		}
 		$data = new stdClass();
         $result = new stdClass();
@@ -83,12 +78,12 @@ class Pay extends CI_Controller {
 		else{
 			$result->title = getLanguage('sua');
 		}
-		$supplierid = $find->supplierid;
-		$data->suppliers = $this->model->table($tb['hotel_supplier'])
-						  ->select('id,supplier_name')
-						  ->where('id',$supplierid)
+		$customerid = $find->customerid;
+		$data->customers = $this->model->table($tb['crmd_customer'])
+						  ->select('id,customer_name')
+						  ->where('id',$customerid)
 						  ->find();
-		$data->supplierid = $supplierid;
+		$data->customerid = $customerid;
 		$data->title = $result->title;
 		$details = $this->model->findDetail($id);
 		$amount = 0;
@@ -163,9 +158,8 @@ class Pay extends CI_Controller {
 		$id = $this->input->post('id');
 		$login = $this->login;
 		$acction_before = $this->model->findID($id);
-		$array['dateupdate']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
-		$array['userupdate'] = $this->login->username;
-		//$array['ipupdate'] = $this->base_model->getMacAddress();
+		$array['date_update_pay']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
+		$array['user_update_pay'] = $this->login->username;
 		$result['status'] =$this->model->edits($array,$id);
 		
 		$arr_log['func'] = $this->uri->segment(2);
@@ -190,7 +184,7 @@ class Pay extends CI_Controller {
 		$array['userupdate'] = $this->login->username;
 		#region check edit
 		$finds = $this->model->findID($id);
-		$checkExit = $this->model->table($tb['hotel_pay'])
+		$checkExit = $this->model->table($tb['crmd_pay'])
 									  ->select('uniqueid')
 									  ->where('isdelete',0)
 									  ->where('uniqueid',$finds->uniqueid)
@@ -202,7 +196,7 @@ class Pay extends CI_Controller {
 		}
 		#end
 		$acction_before = $this->model->findID($id);
-		$this->model->table($tb['hotel_liabilities_buy_buy'])
+		$this->model->table($tb['crmd_ticket_buy'])
 					->where('id',$id)
 					->delete();
 		$description = "Xóa: ".$finds->uniqueid;
@@ -220,9 +214,9 @@ class Pay extends CI_Controller {
 		$payment = $this->input->post('payment');
 		$bankid = $this->input->post('bankid');
 		$datepo =  $this->input->post('datepo');
-		$supplierid =  $this->input->post('supplierid');
+		$customerid =  $this->input->post('customerid');
 		$array = array();
-		$array['supplierid'] = $supplierid;
+		$array['customerid'] = $customerid;
 		$array['notes'] = $description;
 		$array['amount'] = $amount;
 		$array['payment'] = $payment;

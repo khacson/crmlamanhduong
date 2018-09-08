@@ -1,5 +1,5 @@
 <ul class="nav nav-tabs" style="margin-top:-10px;">
-  <li id="menu1Click" class="active"><a data-toggle="tab" href="#menu1"><?=getLanguage('cap-nhat-cong-no');?></a></li>
+  <li id="menu1Click" class="active"><a data-toggle="tab" href="#menu1"><?=getLanguage('cap-nhat-thanh-toan');?></a></li>
   <li id="menu2Click" class="hiddensave"><a data-toggle="tab" href="#menu2"><?=getLanguage('lich-su-thanh-toan');?></a></li>
   <li style="float:right;">
 	 <button type="button" style="margin-top:10px;" class="close" data-dismiss="modal">&times;</button>
@@ -11,10 +11,10 @@
 		<div class="row mtop10">
 			<div class="col-md-12">
 				<div class="form-group">
-					<label class="control-label col-md-4"><?=getLanguage('nha-cung-cap');?></label>
+					<label class="control-label col-md-4"><?=getLanguage('khach-hang');?></label>
 					<div class="col-md-8">
-						<input type="text" value="<?=$suppliers->supplier_name;?>" class="form-control " readonly />
-						<input type="hidden" name="supplierid" id="supplierid" value="<?=$supplierid;?>" class="form-control fm-number" required />
+						<input type="text" value="<?=$customers->customer_name;?>" class="form-control " readonly />
+						<input type="hidden" name="supplierid" id="supplierid" value="<?=$customerid;?>" class="form-control fm-number" required />
 					</div>
 				</div>
 			</div>
@@ -22,9 +22,9 @@
 		<div class="row mtop10">
 			<div class="col-md-12">
 				<div class="form-group">
-					<label class="control-label col-md-4"><?=getLanguage('cong-no');?></label>
+					<label class="control-label col-md-4"><?=getLanguage('tong-tien');?></label>
 					<div class="col-md-8">
-						<input type="text" value="<?=fmNumber($finds->amount_debt);?>" class="form-control " readonly />
+						<input type="text" value="<?=fmNumber($finds->ticket_price);?>" class="form-control " readonly />
 					</div>
 				</div>
 			</div>
@@ -44,7 +44,7 @@
 				<div class="form-group">
 					<label class="control-label col-md-4"><?=getLanguage('con-lai');?></label>
 					<div class="col-md-8">
-						<input type="text" value="<?=fmNumber(($finds->amount_debt) - $amount);?>" class="form-control " readonly />
+						<input type="text" value="<?=fmNumber(($finds->ticket_price) - $amount);?>" class="form-control " readonly />
 					</div>
 				</div>
 			</div>

@@ -11,47 +11,44 @@
 	function getSearch($search){
 		$sql = "";
 		$companyid = $this->login->companyid;
-		if(!empty($search['supplierid'])){
-			$sql.= " and l.supplierid in (".$search['supplierid'].") ";	
+		if(!empty($companyid)){
+			$sql.= " and tk.customerid = '".$companyid."' ";	
 		}
-		if(!empty($search['pnk'])){
-			$sql.= " and l.pnk like  '%".$search['pnk']."%' ";	
+		if(!empty($search['customerid'])){
+			$sql.= " and tk.customerid in (".$search['customerid'].") ";	
 		}
-		if(!empty($search['price'])){
-			$sql.= " and l.price like  '%".fmNumberSave($search['price'])."%' ";	
+		if(!empty($search['ticket_code'])){
+			$sql.= " and tk.ticket_code like  '%".fmNumberSave($search['ticket_code'])."%' ";	
 		}
-		if(!empty($search['amount_debt'])){
-			$sql.= " and l.amount_debt like  '%".$search['amount_debt']."%' ";	
+		if(!empty($search['ticket_price'])){
+			$sql.= " and tk.ticket_price like  '%".$search['ticket_price']."%' ";	
 		}
-		if(!empty($search['description'])){
-			$sql.= " and l.description like  '%".$search['description']."%' ";	
+		if(!empty($search['ticket_description_pay'])){
+			$sql.= " and tk.ticket_description_pay like  '%".$search['ticket_description_pay']."%' ";	
 		}
-		if(!empty($search['expirationdate'])){
-			$sql.=" and l.expirationdate = '".fmDateSave($search['expirationdate'])." '";	
+		if(!empty($search['ticket_date_expired'])){
+			$sql.=" and tk.ticket_date_expired = '".fmDateSave($search['ticket_date_expired'])." '";	
 		}
 		return $sql;
 	}
 	function getList($search,$page,$rows){
 		$searchs = $this->getSearch($search);
 		$tb = $this->base_model->loadTable();
-		$skey = $this->login->skey;
-		$sql = "SELECT l.*, c.supplier_name,
+		$sql = "SELECT tk.*, c.customer_name,
 				(
 					select sum(amount)
-					from `".$tb['hotel_pay']."`
+					from `".$tb['crmd_pay']."`
 					where isdelete = 0
-					and orderid = l.id
-					and pay_type = 3
+					and ticket_id = tk.id
 				) da_thanh_toan
-				FROM `".$tb['hotel_liabilities_buy']."` AS l
-				LEFT JOIN `".$tb['hotel_supplier']."` c on c.id = l.supplierid 
-				WHERE l.isdelete = 0  
-				and l.liabilities = 2
+				FROM `".$tb['crmd_ticket']."` AS tk
+				LEFT JOIN `".$tb['crmd_customer']."` c on c.id = tk.customerid 
+				WHERE tk.isdelete = 0  
 				and c.isdelete = 0
 				$searchs
 				";
 		if(empty($search['order'])){
-			$sql.= ' ORDER BY c.id DESC ';
+			$sql.= ' ORDER BY c.datecreate DESC ';
 		}
 		else{
 			$sql.= ' ORDER BY '.$search['order'].' '.$search['index'].' ';
@@ -65,10 +62,9 @@
 		$searchs = $this->getSearch($search);
 		$sql = " 
 		SELECT count(1) total
-		FROM `".$tb['hotel_liabilities_buy']."` AS l
-				LEFT JOIN `".$tb['hotel_supplier']."` c on c.id = l.supplierid 
-				WHERE l.isdelete = 0  
-				and l.liabilities = 2
+		FROM `".$tb['crmd_ticket']."` AS tk
+				LEFT JOIN `".$tb['crmd_customer']."` c on c.id = tk.customerid 
+				WHERE tk.isdelete = 0  
 				and c.isdelete = 0
 				$searchs
 		";
@@ -81,31 +77,31 @@
 		$array['expirationdate'] =  fmDateSave($array['expirationdate']);
 		$uniqueid = $this->base_model->getUniqueid();
 		$array['liabilities'] = 1;
-		$array['orderid'] = -1;
+		$array['ticket_id'] = -1;
 		$array['branchid'] = $this->login->branchid;
 		//Check exit;
-		$checkExit = $this->model->table($tb['hotel_liabilities_buy'])
+		$checkExit = $this->model->table($tb['crmd_ticket'])
 						  ->select('id')
 						  ->where('liabilities',1)
-						  ->where('supplierid',$array['supplierid'])
+						  ->where('customerid',$array['customerid'])
 						  ->find();
 		if(!empty($checkExit->id)){
 			return -1;
 		}
-		$this->model->table($tb['hotel_liabilities_buy'])->insert($array);	
+		$this->model->table($tb['crmd_ticket'])->insert($array);	
 		return 1;
 	}
 	function edits($array,$id){
 		$tb = $this->base_model->loadTable();
 		$updates = array();
-		$updates['expirationdate'] =  fmDateSave($array['expirationdate']);
-		$updates['description'] = $array['description'];
-		$this->model->table($tb['hotel_liabilities_buy'])->where('id',$id)->update($updates);	
+		$updates['ticket_date_expired'] =  fmDateSave($array['ticket_date_expired']);
+		$updates['ticket_price'] = fmNumberSave($array['ticket_price']);
+		$this->model->table($tb['crmd_ticket'])->where('id',$id)->update($updates);	
 		return 1;
 	 }
 	 function findID($id){
 		 $tb = $this->base_model->loadTable();
-		 $query = $this->model->table($tb['hotel_liabilities_buy'])
+		 $query = $this->model->table($tb['crmd_ticket'])
 					  ->select('*')
 					  ->where('id',$id)
 					  ->find();
@@ -113,10 +109,9 @@
 	 }
 	 function findDetail($id){
 		 $tb = $this->base_model->loadTable();
-		 $query = $this->model->table($tb['hotel_pay'])
+		 $query = $this->model->table($tb['crmd_pay'])
 					  ->select('*')
-					  ->where('orderid',$id)
-					  ->where('pay_type',3)
+					  ->where('ticket_id',$id)
 					  ->order_by('datecreate','desc')
 					  ->find_all();
 		return $query;
@@ -131,16 +126,11 @@
 		$datepo = fmDateSave($array['datepo']);
 		$poid = $this->createPoPay($branchid,$datepo);
 		$insert['pay_code']  = $poid;
-		$insert['poid']  = $finds->pnk; //chi khac
-		$insert['branchid']  = $branchid; //chi khac
 		$insert['amount'] = fmNumberSave($array['amount']);
 		$insert['datecreate']  = gmdate("Y-m-d H:i:s", time() + 7 * 3600);
 		$insert['usercreate'] = $this->login->username;
-		$insert['signature'] = $this->login->signature;
-		$insert['signature_name'] = $this->login->fullname;
 		$insert['notes'] = $array['notes'];
 		$insert['payment'] = $array['payment'];
-		$insert['pay_type'] = 3; //= 3 Cập nhật công nợ
 		$insert['bankid'] = $array['bankid'];
 		if(empty($array['bankid'])){
 			$insert['bankid'] = 0;
@@ -148,10 +138,10 @@
 		if( $array['payment'] == 1){
 			$insert['bankid'] = 0;
 		}
-		$insert['orderid'] = $id;
+		$insert['ticket_id'] = $id;
 		$insert['datepo'] = $datepo; 
-		$insert['supplierid'] = $array['supplierid'];
-		$this->model->table($tb['hotel_pay'])->insert($insert);	
+		$insert['customerid'] = $array['customerid'];
+		$this->model->table($tb['crmd_pay'])->insert($insert);	
 		
 		$description = getLanguage('them-moi').': '.$poid;
 		$this->base_model->addAcction(getLanguage('phieu-chi'),$this->uri->segment(2),'','',$description);
@@ -159,7 +149,7 @@
 	 }
 	 function findPOID($pay_code){
 		$tb = $this->base_model->loadTable();
-		$query = $this->model->table($tb['hotel_pay'])
+		$query = $this->model->table($tb['crmd_pay'])
 					  ->select('*')
 					  ->where('pay_code',$pay_code);
 		$query = $query->find();
@@ -169,7 +159,7 @@
 	 function createPoPay($branchid,$datecreate){//Phieu chi
 		$tb = $this->base_model->loadTable();
 		$yearDay = fmMonthSave($datecreate);
-		$checkPOid = $this->model->table($tb['hotel_pay'])
+		$checkPOid = $this->model->table($tb['crmd_pay'])
 							 ->select('pay_code')
 							 ->where("datepo like '$yearDay%'")
 							 //->where('branchid',$branchid)
