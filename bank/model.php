@@ -10,7 +10,7 @@
 	}
 	function findID($id){
 		$tb = $this->base_model->loadTable(); 
-		$query = $this->model->table($tb['hotel_bank'])
+		$query = $this->model->table($tb['crmd_bank'])
 					  ->select('*')
 					  ->where('id',$id)
 					  ->find();
@@ -37,7 +37,7 @@
 		$tb = $this->base_model->loadTable();
 		$searchs = $this->getSearch($search);
 		$sql = "SELECT b.id, b.bank_name, b.bank_code, b.description, b.bank_owner
-				FROM `".$tb['hotel_bank']."` AS b
+				FROM `".$tb['crmd_bank']."` AS b
 				WHERE b.isdelete = 0 
 				$searchs
 				";
@@ -56,7 +56,7 @@
 		$searchs = $this->getSearch($search);
 		$sql = " 
 		SELECT count(1) total
-		FROM `".$tb['hotel_bank']."` AS b
+		FROM `".$tb['crmd_bank']."` AS b
 		WHERE b.isdelete = 0 
 		$searchs	
 		";
@@ -69,7 +69,7 @@
 		foreach($array as $key=>$val){
 			$array[$key] = trim($val);
 		}
-		$check = $this->model->table($tb['hotel_bank'])
+		$check = $this->model->table($tb['crmd_bank'])
 					  ->select('id')
 					  ->where('isdelete',0)
 					  ->where('bank_name',$array['bank_name'])
@@ -77,7 +77,7 @@
 		if(!empty($check->id)){
 			return -1;	
 		}
-		$result = $this->model->table($tb['hotel_bank'])->insert($array);	
+		$result = $this->model->table($tb['crmd_bank'])->insert($array);	
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			return 0;
@@ -94,7 +94,7 @@
 		 foreach($array as $key=>$val){
 			$array[$key] = trim($val);
 		 }
-		 $check = $this->model->table($tb['hotel_bank'])
+		 $check = $this->model->table($tb['crmd_bank'])
 		 ->select('id')
 		 ->where('isdelete',0)
 		 ->where('id <>',$id)
@@ -103,7 +103,7 @@
 		 if(!empty($check->id)){
 			 return -1;	
 		 }
-		 $result = $this->model->table($tb['hotel_bank'])->where('id',$id)->update($array);	
+		 $result = $this->model->table($tb['crmd_bank'])->where('id',$id)->update($array);	
 		 if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			return 0;

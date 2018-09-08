@@ -10,7 +10,6 @@ foreach ($datas as $key => $item) {
 			<input id="<?=$item->id;?>" class="noClick" type="checkbox" value="<?=$item->id; ?>" name="keys[]">
 		</td>
 		<td style="text-align: center;"><?=$i;?></td>
-		<td class="bank_owner"><?=$item->bank_owner;?></td>
 		<td class="bank_code"><?=$item->bank_code;?></td>
 		<td class="bank_name"><?=$item->bank_name;?></td>
 		<td class="description"><?=$item->description;?></td>

@@ -45,7 +45,7 @@ class Bank extends CI_Controller {
 		$find = $this->model->findID($id);
 		if(empty($find->id)){
 			$tbs = $this->base_model->loadTable();
-			$find = $this->base_model->getColumns($tbs['hotel_bank']);
+			$find = $this->base_model->getColumns($tbs['crmd_bank']);
 		}
 		$data = new stdClass();
         $result = new stdClass();
@@ -142,11 +142,11 @@ class Bank extends CI_Controller {
 		$array['isdelete'] = 1;
 		$array['userupdate'] = $this->login->username;
 
-		$queryDelete = $this->model->table($tb['hotel_bank'])
+		$queryDelete = $this->model->table($tb['crmd_bank'])
 					->select('group_concat(bank_name) as bankname')
 					->where("id in ($id)")
 					->find();
-		 $this->model->table($tb['hotel_bank'])
+		 $this->model->table($tb['crmd_bank'])
 					->where("id in ($id)")
 					->update($array);
 		$description = getLanguage('xoa').": ".$queryDelete->bankname;

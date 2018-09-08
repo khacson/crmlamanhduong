@@ -1,12 +1,11 @@
 <style title="" type="text/css">
 	table col.c1 { width: 50px; }
 	table col.c2 { width: 50px; }
-	table col.c3 { width: 180px;}
-	table col.c4 { width: 150px;}
+	table col.c3 { width: 130px;}
+	table col.c4 { width: 300px;}
 	table col.c5 { width: 250px;}
-	table col.c6 { width: 250px;}
-	table col.c7 { width: 70px;}
-	table col.c8 { width: auto;}
+	table col.c6 { width: 70px;}
+	table col.c7 { width: auto;}
 	.col-md-4{ white-space: nowrap !important;}
 </style>
 
@@ -68,15 +67,14 @@
 				<div id="cHeader">
 					<div id="tHeader">    	
 						<table id="tbheader" width="100%" cellspacing="0" border="1" >
-							<?php for($i=1; $i< 9; $i++){?>
+							<?php for($i=1; $i< 8; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr>							
 								<th><input type="checkbox" name="checkAll" id="checkAll" /></th>
-								<th><?=getLanguage('stt')?></th>	
-								<th id="ord_b.bank_owner"><?=getLanguage('chu-tai-khoan')?></th>	
-								<th id="ord_b.bank_code"><?=getLanguage('tai-khoan')?></th>
-								<th id="ord_b.bank_name"><?=getLanguage('chi-nhanh')?></th>
+								<th><?=getLanguage('stt')?></th>		
+								<th id="ord_b.bank_code"><?=getLanguage('ma-ngan-hang')?></th>
+								<th id="ord_b.bank_name"><?=getLanguage('ngan-hang')?></th>
 								<th id="ord_b.description"><?=getLanguage('ghi-chu')?></th>
 								<th></th>
 								<th></th>
@@ -89,7 +87,7 @@
 				<div id="data">
 					<div id="gridView">
 						<table id="tbbody" width="100%" cellspacing="0" border="1">
-							<?php for($i=1; $i < 9; $i++){?>
+							<?php for($i=1; $i < 8; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr class="row-search">
