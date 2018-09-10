@@ -18,7 +18,10 @@
 			$sql.= " and tk.customerid in (".$search['customerid'].") ";	
 		}
 		if(!empty($search['ticket_code'])){
-			$sql.= " and tk.ticket_code like  '%".fmNumberSave($search['ticket_code'])."%' ";	
+			$sql.= " and tk.ticket_code like  '%".$search['ticket_code']."%' ";	
+		}
+		if(!empty($search['ticket_name'])){
+			$sql.= " and tk.ticket_name like  '%".$search['ticket_name']."%' ";	
 		}
 		if(!empty($search['ticket_price'])){
 			$sql.= " and tk.ticket_price like  '%".$search['ticket_price']."%' ";	
@@ -99,7 +102,7 @@
 		$this->model->table($tb['crmd_ticket'])->where('id',$id)->update($updates);	
 		return 1;
 	 }
-	 function findID($id){
+	function findID($id){
 		 $tb = $this->base_model->loadTable();
 		 $query = $this->model->table($tb['crmd_ticket'])
 					  ->select('*')
@@ -107,7 +110,7 @@
 					  ->find();
 		return $query;
 	 }
-	 function findDetail($id){
+	function findDetail($id){
 		 $tb = $this->base_model->loadTable();
 		 $query = $this->model->table($tb['crmd_pay'])
 					  ->select('*')
@@ -147,7 +150,7 @@
 		$this->base_model->addAcction(getLanguage('phieu-chi'),$this->uri->segment(2),'','',$description);
 		return $poid;
 	 }
-	 function findPOID($pay_code){
+	function findPOID($pay_code){
 		$tb = $this->base_model->loadTable();
 		$query = $this->model->table($tb['crmd_pay'])
 					  ->select('*')
@@ -156,7 +159,7 @@
 		return $query;
 	}
 	 //Tạo mã phiếu chi
-	 function createPoPay($branchid,$datecreate){//Phieu chi
+	function createPoPay($branchid,$datecreate){//Phieu chi
 		$tb = $this->base_model->loadTable();
 		$yearDay = fmMonthSave($datecreate);
 		$checkPOid = $this->model->table($tb['crmd_pay'])
@@ -166,15 +169,15 @@
 							 ->where('isdelete',0)
 							 ->order_by('id','DESC')
 							 ->find();
-		$cfpc = cfpc();
+		$cfpt = cfpt();
 		if(!empty($checkPOid->pay_code)){
-			$poid = str_replace($cfpc,'',$checkPOid->pay_code);
+			$poid = str_replace($cfpt,'',$checkPOid->pay_code);
 			$poc = (float)$poid;
 		}
 		else{
 			$poc = date('ym',strtotime($yearDay)).'00000';
 		}
-		$pay_code = $cfpc.($poc + 1);
+		$pay_code = $cfpt.($poc + 1);
 		return $pay_code;
 	}
 }

@@ -13,9 +13,8 @@ foreach ($datas as $key => $item){
 		</td>
 		<td class="text-center"><?=$i;?></td>
 		<td class="customer_name"><?=$item->customer_name;?></td>
-		<td class="ticket_code">
-			<?=$item->ticket_code;?>
-		</td>
+		<td class="ticket_code"><?=$item->ticket_code;?></td>
+		<td class="ticket_name"><?=$item->ticket_name;?></td>
 		<td class="ticket_price text-right"><?=fmNumber($item->ticket_price);?></td>
 		<td class="text-right"><?=fmNumber($item->da_thanh_toan);?></td>
 		<td class="text-right"><?=fmNumber(($item->ticket_price) - ($item->da_thanh_toan));?></td>

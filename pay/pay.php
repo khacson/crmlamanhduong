@@ -9,7 +9,7 @@ class Pay extends CI_Controller {
 	private $login;
 	function __construct(){
 		parent::__construct();	
-		$this->load->model(array('model','base_model'));
+		$this->load->model(array('excel_model','base_model'));
 		$this->login = $this->site->getSession('login');
 		$this->route = $this->router->class;
 		$menus = $this->site->getSession('menus');

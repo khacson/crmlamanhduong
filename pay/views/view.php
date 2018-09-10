@@ -1,14 +1,15 @@
 <style title="" type="text/css">
 	table col.c1 { width: 50px; }
 	table col.c2 { width: 50px; }
-	table col.c3 { width: 180px;}
+	table col.c3 { width: 160px;}
 	table col.c4 { width: 110px;}
-	table col.c5 { width: 100px;}
-	table col.c6 { width: 120px;}
-	table col.c7 { width: 110px;}
-	table col.c8 { width: 120px;}
-	table col.c9 { width: 250px;}
-	table col.c10 { width: auto;}
+	table col.c5 { width: 180px;}
+	table col.c6 { width: 100px;}
+	table col.c7 { width: 120px;}
+	table col.c8 { width: 110px;}
+	table col.c9 { width: 120px;}
+	table col.c10 { width: 250px;}
+	table col.c11 { width: auto;}
 	.col-md-4{ white-space: nowrap !important;}
 </style>
 
@@ -69,14 +70,15 @@
 				<div id="cHeader">
 					<div id="tHeader">    	
 						<table id="tbheader" width="100%" cellspacing="0" border="1" >
-							<?php for($i=1; $i< 11; $i++){?>
+							<?php for($i=1; $i< 12; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr>							
 								<th><input type="checkbox" name="checkAll" id="checkAll" /></th>
 								<th><?=getLanguage('stt')?></th>
 								<th id="ord_tk.customerid "><?=getLanguage('khach-hang')?></th>
-								<th id="ord_tk.ticket_code"><?=getLanguage('ticket')?></th>
+								<th id="ord_tk.ticket_code"><?=getLanguage('ma-yeu-cau')?></th>
+								<th id="ord_tk.ticket_name"><?=getLanguage('yeu-cau')?></th>
 								<th id="ord_tk.ticket_price"><?=getLanguage('tong-tien')?></th>
 								<th><?=getLanguage('da-thanh-toan')?></th>
 								<th><?=getLanguage('con-no')?></th>
@@ -92,7 +94,7 @@
 				<div id="data">
 					<div id="gridView">
 						<table id="tbbody" width="100%" cellspacing="0" border="1">
-							<?php for($i=1; $i < 11; $i++){?>
+							<?php for($i=1; $i < 12; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr class="row-search">
@@ -107,6 +109,9 @@
 								</td>
 								<td>
 									<input type="text" name="ticket_code" id="ticket_code" class="searchs form-control " />
+								</td>
+								<td>
+									<input type="text" name="ticket_name" id="ticket_name" class="searchs form-control " />
 								</td>
 								<td>
 									<input type="text" name="ticket_price" id="ticket_price" class="searchs form-control " />
@@ -273,7 +278,7 @@
 		printRecept(ptid);
 	});
 	function searchFunction(){
-		$("#ticket_code,#ticket_price,#ticket_description_pay").keyup(function() {
+		$("#ticket_code,#ticket_price,#ticket_description_pay,#ticket_name").keyup(function() {
 			searchList();	
 		});
 		$("#click_date").on("changeDate", function(e) {
