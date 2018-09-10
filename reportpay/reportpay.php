@@ -36,6 +36,12 @@ class Reportpay extends CI_Controller {
 	    $data->controller = base_url().$this->route;
 		$data->routes = $this->route;
 		
+		$dateNow =  gmdate("d-m-Y", time() + 7 * 3600); 
+		$week = strtotime(date("d-m-Y", strtotime($dateNow))." -1 week"); 
+		$week = strftime("%d/%m/%Y", $week);
+		$data->todates = $dateNow;
+		$data->fromdates = $week;
+		
 		$data->customers = $this->base_model->getCustomer('');	
 		$content = $this->load->view('view',$data,true);
 		$this->site->write('content',$content,true);
@@ -69,5 +75,57 @@ class Reportpay extends CI_Controller {
 		$result->viewtotal = number_format($count); 
         $result->content = $this->load->view('list', $data, true);
 		echo json_encode($result);
+	}
+	function export(){
+		$login = $this->login;
+		$search = $_GET['search'];
+		$searchs = json_decode($search,true);
+		$datas = $this->model->getList($searchs,0,0);
+
+		include(APPPATH . 'libraries/excel2013/PHPExcel/IOFactory' . EXT);
+        $fileName = APPPATH . 'Template/report.xls';
+        $versionExcel = 'Excel5';
+        $inputFileType = PHPExcel_IOFactory::identify($fileName);
+        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+        $objPHPExcel = $objReader->load($fileName);
+        $sheetIndex = $objPHPExcel->setActiveSheetIndex(0);
+        $sheetIndex->setTitle('Report');
+        $sheetIndex->getDefaultStyle()->getFont()
+                ->setName('Times New Roman')
+                ->setSize(12);
+
+		//Header
+		$sheetIndex->setCellValueByColumnAndRow(0,1,getLanguage('stt'));	
+		$sheetIndex->setCellValueByColumnAndRow(1,1,getLanguage('khach-hang'));
+		$sheetIndex->setCellValueByColumnAndRow(2,1,getLanguage('ma-yeu-cau'));
+		$sheetIndex->setCellValueByColumnAndRow(3,1,getLanguage('yeu-cau'));
+		$sheetIndex->setCellValueByColumnAndRow(4,1,getLanguage('so-tien'));
+		$sheetIndex->setCellValueByColumnAndRow(5,1,getLanguage('ngay-nhan'));
+		$sheetIndex->setCellValueByColumnAndRow(6,1,getLanguage('nguoi-nhan'));
+		$sheetIndex->setCellValueByColumnAndRow(7,1,getLanguage('ghi-chu'));
+			
+		$i= 2; 
+		foreach ($datas as $item) { 
+			$datepo = '';
+			if($item->datepo != '0000-00-00' && !empty($item->datepo)){
+				$datepo = date(cfdate(),strtotime($item->datepo));
+			}
+			$sheetIndex->setCellValueByColumnAndRow(0,$i,$i-1);	
+			$sheetIndex->setCellValueByColumnAndRow(1,$i,$item->customer_name);
+			$sheetIndex->setCellValueByColumnAndRow(2,$i,$item->ticket_code);
+			$sheetIndex->setCellValueByColumnAndRow(3,$i,$item->ticket_name);
+			$sheetIndex->setCellValueByColumnAndRow(4,$i,$item->amount);
+			$sheetIndex->setCellValueByColumnAndRow(5,$i,$datepo);
+			$sheetIndex->setCellValueByColumnAndRow(6,$item->usercreate);
+			$sheetIndex->setCellValueByColumnAndRow(7,$i,$item->notes);
+			$i++;
+		}
+		$boderthin = "A2:H".($i-1); 
+		$sheetIndex->getStyle($boderthin)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+		#end
+		$objPHPExcel->setActiveSheetIndex(0);
+		$date = gmdate("dmYHis", time() + 7 * 3600);
+		//$endxls = '.xls';
+        $this->excel_model->exportExcel($objPHPExcel, $versionExcel, "report_".$date.'.xls');
 	}
 }

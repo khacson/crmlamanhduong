@@ -57,7 +57,9 @@
 		else{
 			$sql.= ' ORDER BY '.$search['order'].' '.$search['index'].' ';
 		}
-		$sql.= ' limit '.$page.','.$rows;
+		if(!empty($rows)){
+			$sql.= ' limit '.$page.','.$rows;
+		}
 		$query = $this->model->query($sql)->execute();
 		return $query;
 	}

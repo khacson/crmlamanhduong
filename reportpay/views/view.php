@@ -5,13 +5,16 @@
 	table col.c4 { width: 110px;}
 	table col.c5 { width: 180px;}
 	table col.c5 { width: 100px;}
-	table col.c6 { width: 120px;}
+	table col.c6 { width: 100px;}
 	table col.c7 { width: 110px;}
-	table col.c8 { width: 250px;}
-	table col.c9 { width: auto;}
+	table col.c8 { width: 110px;}
+	table col.c9 { width: 250px;}
+	table col.c10 { width: auto;}
 	.col-md-4{ white-space: nowrap !important;}
 </style>
-
+<link type="text/css" href="<?=url_tmpl();?>css/daterangepicker.css"  rel="stylesheet">	
+<script type="text/javascript" src="<?=url_tmpl();?>js/moment.js"></script>
+<script type="text/javascript" src="<?=url_tmpl();?>js/daterangepicker.js"></script>
 <!-- BEGIN PORTLET-->
 <div class="row">
 	<?=$this->load->inc('breadcrumb');?>
@@ -158,20 +161,30 @@
 				searchList();
 			 }
 		});
-		$('#actionSave').click(function(){
-			save();
+		$('#datecreate').daterangepicker({
+			 locale: {
+			  format: 'DD/MM/YYYY'
+			},
+			startDate: '<?=$fromdates;?>',
+			endDate: '<?=$todates;?>',
+			timePicker: false,
+        	timePickerIncrement: 8,
+        	showDropdowns: true
+			
+		});
+		$('.datecreateClick').click(function(){
+			$('#datecreate').click();
+		});
+		$('#export').click(function(){
+			window.location = controller + 'export?search='+getSearch();
 		});
 		searchFunction();
-	});
-	$(document.body).on('click', '#printRecept',function (){
-		var ptid = $('#ptid').val();
-		printRecept(ptid);
 	});
 	function searchFunction(){
 		$("#ticket_code,#ticket_code,#ticket_price,#ticket_description_pay,#usercreate").keyup(function() {
 			searchList();	
 		});
-		$("#click_date").on("changeDate", function(e) {
+		$('.datecreateClick').click(function(){
 			searchList();
 		});
 	}

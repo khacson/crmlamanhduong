@@ -15,11 +15,10 @@ foreach ($datas as $key => $item){
 		<td class="customer_name"><?=$item->customer_name;?></td>
 		<td class="ticket_code"><?=$item->ticket_code;?></td>
 		<td class="ticket_name"><?=$item->ticket_name;?></td>
-		<td class="ticket_price text-right"><?=fmNumber($item->ticket_price);?></td>
-		<td class="text-right"><?=fmNumber($item->da_thanh_toan);?></td>
-		<td class="text-right"><?=fmNumber(($item->ticket_price) - ($item->da_thanh_toan));?></td>
-		<td class="ticket_date_expired"><?=$ticket_date_expired;?></td>
-		<td class="ticket_description_pay"><?=$item->ticket_description_pay?></td>
+		<td class="amount text-right"><?=fmNumber($item->amount);?></td>
+		<td class="datepo text-center"><?=$datepo;?></td>
+		<td class="usercreate"><?=$item->usercreate;?></td>
+		<td class="ticket_description_pay"><?=$item->notes;?></td>
 		<td></td>
 	</tr>
 
