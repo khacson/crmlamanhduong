@@ -95,7 +95,7 @@
 								<th><input type="checkbox" name="checkAll" id="checkAll" /></th>
 								<th><?=getLanguage('stt');?></th>								
 								<th id="ord_tk.ticket_code"><?=getLanguage('ma-yeu-cau');?></th>
-								<th id="ord_tk.ticket_name"><?=getLanguage('tieu-de');?></th>
+								<th id="ord_tk.ticket_name"><?=getLanguage('yeu-cau');?></th>
 								<th id="ord_tk.priorityid"><?=getLanguage('do-uu-tien');?></th>
 								<th id="ord_tk.ticket_description"><?=getLanguage('noi-dung-yeu-cau');?></th>
 								<th><?=getLanguage('hinh-anh');?></th>
@@ -307,7 +307,7 @@
 		searchFunction();
 	});
 	function searchFunction(){
-		$("#ticket_code,#ticket_name,#ticket_description,#ticket_contat_name,#ticket_contat_name").keyup(function() {
+		$("#ticket_code,#ticket_name,#ticket_description").keyup(function() {
 			searchList();	
 		});
 		$('.datecreateClick').click(function(){
