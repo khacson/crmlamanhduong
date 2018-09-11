@@ -160,9 +160,9 @@
 								<td></td>
 								<td>
 									<select id="reply_result" name="reply_result" class="combos">
-										<option value="0">Chưa xử lý</option>
-										<option value="1">Đã xữ lý</option>
-										<option value="2">Không xử lý được</option>
+										<?php foreach($statuss as $item){?>
+											<option value="<?=$item->id;?>"><?=$item->status_name;?></option>
+										<?php }?>
 									</select>
 								</td>
 								<td>

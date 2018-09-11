@@ -16,14 +16,14 @@ foreach ($datas as $key => $item) {
 	$color = '';
 	if($item->reply_result == 2){
 		$color = 'color:#f00;';
-		$reply_result = '<a class="btn btn-danger" style="padding:0 3px;">'.getLanguage('khong-xu-ly-duoc').'</a>';
+		$reply_result = '<a class="btn btn-danger" style="padding:0 3px;">'.$item->status_name .'</a>';
 	}
 	elseif($item->reply_result == 0){
-		$reply_result = '<a class="btn btn-warning" style="padding:0 3px;">'.getLanguage('chua-xu-ly').'</a>';
+		$reply_result = '<a class="btn btn-warning" style="padding:0 3px;">'.$item->status_name .'</a>';
 	}
 	else{
 		$color = 'color:#9b9067;';
-		$reply_result = '<a class="btn btn-info" style="padding:0 3px;">'.getLanguage('da-xu-ly').'</a>';
+		$reply_result = '<a class="btn btn-info" style="padding:0 3px;">'.$item->status_name .'</a>';
 	}
 	$reply_status = '';
 	if($item->reply_status == 1){

@@ -40,6 +40,7 @@ class Ticket extends CI_Controller {
 	    $data->controller = base_url().$this->route;
 		$data->routes = $this->route;	
 		$data->prioritys = $this->base_model->getPriority();
+		$data->statuss = $this->base_model->getStatus();
 		$content = $this->load->view('view',$data,true);
 		$this->site->write('content',$content,true);
 		$this->site->write('title',getLanguage('quan-ly-ticket'),true);

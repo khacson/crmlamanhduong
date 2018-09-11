@@ -58,9 +58,10 @@
 	function getList($search,$page,$rows){
 		$tb = $this->base_model->loadTable();
 		$searchs = $this->getSearch($search);
-		$sql = "SELECT tk.*, pt.priority_name, c.customer_name
+		$sql = "SELECT tk.*, pt.priority_name, c.customer_name, st.status_name
 				FROM `".$tb['crmd_ticket']."` AS tk
 				LEFT JOIN `".$tb['crmd_priority']."` AS pt on pt.id = tk.priorityid
+				LEFT JOIN `".$tb['crmd_status']."` AS st on st.id = tk.reply_result
 				LEFT JOIN `".$tb['crmd_customer']."` AS c on c.id = tk.customerid
 				WHERE tk.isdelete = 0 
 				$searchs
