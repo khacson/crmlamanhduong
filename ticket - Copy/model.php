@@ -31,11 +31,14 @@
 		if(!empty($search['priorityid'])){
 			$sql.= " and tk.priorityid in (".$search['priorityid'].") ";	
 		}
-		if(!empty($search['reply_result'] != '')){
+		if($search['reply_result'] != ''){
 			$sql.= " and tk.reply_result in (".$search['reply_result'].") ";	
 		}
-		if(!empty($search['usercreate'])){
-			$sql.= " and tk.usercreate like '%".$search['usercreate']."%' ";	
+		if($search['reply_status'] != ''){
+			$sql.= " and tk.reply_status in (".$search['reply_status'].") ";	
+		}
+		if(!empty($search['ticket_description'])){
+			$sql.= " and tk.ticket_description like '%".$search['ticket_description']."%' ";	
 		}
 		if(!empty($search['ticket_contat_name'])){
 			$sql.= " and tk.ticket_contat_name like '%".$search['ticket_contat_name']."%' ";	
@@ -55,7 +58,7 @@
 	function getList($search,$page,$rows){
 		$tb = $this->base_model->loadTable();
 		$searchs = $this->getSearch($search);
-		$sql = "SELECT tk.*, pt.priority_name, c.customer_name, st.status_name, st.color, st.background
+		$sql = "SELECT tk.*, pt.priority_name, c.customer_name, st.status_name
 				FROM `".$tb['crmd_ticket']."` AS tk
 				LEFT JOIN `".$tb['crmd_priority']."` AS pt on pt.id = tk.priorityid
 				LEFT JOIN `".$tb['crmd_status']."` AS st on st.id = tk.reply_result

@@ -1,16 +1,11 @@
 <script type="text/javascript">
 $(function () {
-	$('#container3').highcharts({
+	$('#container').highcharts({
         chart: {
-            type: 'pie',
-			spacingBottom: 10,
-			spacingTop: 10,
-			spacingLeft: 10,
-			spacingRight: 10,
+            type: 'pie'
         },
-		/**/
         title: {
-            text: 'Độ ưu tiên'
+            text: 'Thống kê theo đơn hàng xuất'
         },
         subtitle: {
             text: ''
@@ -23,16 +18,17 @@ $(function () {
                 }
             }
         },
+
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:f} Ticket</b>  <br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:f} đơn hàng</b>  <br/>'
         },
         series: [{
-            name: 'Ticket',
+            name: 'Ngày',
             colorByPoint: true,
-            data: [<?=$billInput;?>]
+            data: [<?=$bill;?>]
         }],
     });
 });
 </script>
-<div id="container3" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+<div id="container" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>

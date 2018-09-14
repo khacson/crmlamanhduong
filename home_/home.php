@@ -6,6 +6,7 @@
  */
 class Home extends CI_Controller {
     private $route;
+	private $login;
 	function __construct(){
 		parent::__construct();	
 		$this->load->model(array('model','base_model'));
@@ -46,8 +47,7 @@ class Home extends CI_Controller {
 		$week = strftime("%d/%m/%Y", $week);
 		$data->todates = $dateNow;
 		$data->fromdates = $week;
-		
-		$title_page = 'Quản lý khách hàng';
+		$title_page = getLanguage('quan-ly-khach-hang');
 		
 		$content = $this->load->view('view',$data,true);
 		$this->site->write('content',$content,true);
@@ -91,8 +91,7 @@ class Home extends CI_Controller {
 		$result->doanhthubanhang = number_format($doanhThuBanhang);
 		$result->sovoihomquas = $sovoihomquas;
 		$result->customers = $this->model->getCustomer()->total;
-		$result->chuaxuly = $this->model->getStatus(1)->total;
-		$result->daxuly = $this->model->getStatus(2)->total;
+		$result->suppliers = $this->model->getSupplier()->total;
 		$result->oders = 0;
 		echo json_encode($result);
 	}
@@ -145,38 +144,38 @@ class Home extends CI_Controller {
 			$result->doanhthu = number_format($doanhthu). 'đ';
 		}
 		//Theo so luong
-		//$query = $this->model->getOrdersList($formDate,$toDate,$branchid);
-		//$bill = $this->bill($query);
-		//$data->bill = $bill;
-		//$result->content = $this->load->view('bill', $data, true);
+		$query = $this->model->getOrdersList($formDate,$toDate,$branchid);
+		$bill = $this->bill($query);
+		$data->bill = $bill;
+		$result->content = $this->load->view('bill', $data, true);
 		
 		//Theo tien
 		//$queryPrice = $this->model->getOrdersListPrice($formDate,$toDate,$branchid);
 		//$billPrice = $this->bill($queryPrice);
 		//$data->billPrice = $billPrice;
 		//$result->content2 = $this->load->view('bill2', $data, true);	
-		//$queryPrice = $this->model->getByCatalog($formDate,$toDate,$branchid);
-		//$data2 = new stdClass();
-		//$billPrice = $this->bill2($queryPrice);
-		//$data2->billPrice = $billPrice;
-		//$result->content2 = $this->load->view('bill2', $data2, true);	
+		$queryPrice = $this->model->getByCatalog($formDate,$toDate,$branchid);
+		$data2 = new stdClass();
+		$billPrice = $this->bill2($queryPrice);
+		$data2->billPrice = $billPrice;
+		$result->content2 = $this->load->view('bill2', $data2, true);	
 		
 		//Thong ke theo hang
 		//$queryOuputGoods = $this->model->getOrdersListOutgoods($formDate,$toDate,$branchid); 
 		//print_r($queryOuputGoods); exit;
-		$priority = $this->model->getPriority($formDate,$toDate); 
-		$billInput = $this->callPriority($priority);
+		$queryByRoom = $this->model->getOrderByRoom($formDate,$toDate); 
+		$billInput = $this->billRoom($queryByRoom);
 		
 		$data->billInput = $billInput;
 		$result->content3 = $this->load->view('bill3', $data, true);
 		//Chart Clm
-		//$clm = $this->clmChart($formDate, $toDate);
-		//$data->listdate = $clm;
-		//$data->dates = date('d/m/Y',strtotime($formDate)).' đến '.date('d/m/Y',strtotime($toDate));
-		//$result->content4 = $this->load->view('bill4', $data, true);
+		$clm = $this->clmChart($formDate, $toDate);
+		$data->listdate = $clm;
+		$data->dates = date('d/m/Y',strtotime($formDate)).' đến '.date('d/m/Y',strtotime($toDate));
+		$result->content4 = $this->load->view('bill4', $data, true);
 		echo json_encode($result);
 	}
-	/*function billRoom($data){
+	function billRoom($data){
 		$str = '';
 		foreach($data as $item){
 			if(empty($item->total)){
@@ -192,8 +191,8 @@ class Home extends CI_Controller {
 			$str = substr($str,1);
 		}
 		return $str;
-	}*/
-	function callPriority($data){
+	}
+	function bill2($data){
 		$str = '';
 		foreach($data as $item){
 			if(empty($item->total)){
@@ -202,12 +201,55 @@ class Home extends CI_Controller {
 			else{
 				$precents = $item->total;
 			}
-			$priority_name = $item->priority_name;
-			$str.= ",{name: '".$priority_name."',y:".$precents."}";
+			$goods_name = $item->goods_name;
+			$str.= ",{name: '".$goods_name."',y:".$precents."}";
 		}
 		if(!empty($str)){
 			$str = substr($str,1);
 		}
 		return $str;
+	}
+	function bill($data){
+		/*$total = 0;
+		foreach($data as $item){
+			$total+= $item->total;
+		}*/
+		$str = '';
+		foreach($data as $item){
+			//$precent = $item->total/$total *100;
+			if(empty($item->total)){
+				$precents = 0;
+			}
+			else{
+				$precents = $item->total;
+			}
+			$date = date('d-m-Y',strtotime($item->datecreate));
+			$str.= ",{name: '".$date."',y:$precents}
+			";
+		}
+		if(!empty($str)){
+			$str = substr($str,1);
+		}
+		return $str;
+	}
+	function clmChart($fromdate, $todate){
+		$datas = $this->model->getOrders($fromdate, $todate); 
+		$str = '';
+		$arr = array();
+		if(count($datas) > 0){
+			foreach($datas as $item){
+				$date = date('d-m-Y',strtotime($item->datecreate));
+				$prices = round($item->price /1000000,2);
+				$str.= ",{name: '$date',y: $prices}";
+			}
+			$str = substr($str,1);
+		}
+		else{
+			$str = '';
+		}
+		return $str;
+	}
+	function deleteData(){
+		
 	}
 }

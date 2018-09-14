@@ -10,6 +10,8 @@ foreach ($datas as $key => $item) {
 		</td>
 		<td style="text-align: center;"><?=$i;?></td>
 		<td class="status_name"><?=$item->status_name;?></td>
+		<td class="color"><?=$item->color;?></td>
+		<td class="background"><?=$item->background;?></td>
 		<td class="text-center">
 			<?php if(isset($permission['edit'])){?>
 				<a id="<?=$id;?>" class="btn btn-info edititem btn-icon2" href="#" data-toggle="modal" data-target="#myModalFrom">

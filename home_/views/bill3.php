@@ -10,7 +10,7 @@ $(function () {
         },
 		/**/
         title: {
-            text: 'Độ ưu tiên'
+            text: 'Doanh thu theo phòng'
         },
         subtitle: {
             text: ''
@@ -25,10 +25,10 @@ $(function () {
         },
         tooltip: {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:f} Ticket</b>  <br/>'
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:f} vnđ</b>  <br/>'
         },
         series: [{
-            name: 'Ticket',
+            name: 'Sản phẩm',
             colorByPoint: true,
             data: [<?=$billInput;?>]
         }],

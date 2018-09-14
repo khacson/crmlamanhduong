@@ -24,12 +24,131 @@ $(function(){
 		$('.btn-picker').click(function(){
 			$('#datetime').click();
 		});
-		$('#search').click(function(){
-			 generalSearch();
-			 searchBilling();
+		$('#branchid').multipleSelect({
+			filter: true,
+			placeholder:'Chi nhánh',
+			single: false
 		});
-		generalSearch();
-		searchBilling();
+		$('#branchid').multipleSelect('uncheckAll');
+		$('#search').click(function(){
+			 //generalSearch();
+			 //searchBilling();
+		});
+		//generalSearch();
+		//searchBilling();
+		 $('#bill3').highcharts({
+			chart: {
+				plotBackgroundColor: null,
+				plotBorderWidth: null,
+				plotShadow: false,
+				type: 'pie'
+			},
+			title: {
+				text: 'Báo cáo theo hãng xe'
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: true,
+						format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+						style: {
+							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+						}
+					}
+				}
+			},
+			series: [{
+				name: 'Brands',
+				colorByPoint: true,
+				data: [{
+					name: 'Hyundai',
+					y: 56.33
+				}, {
+					name: 'Kia',
+					y: 24.03,
+					sliced: true,
+					selected: true
+				}, {
+					name: 'Isuzu',
+					y: 10.38
+				}, {
+					name: 'Suzuki',
+					y: 4.77
+				}, {
+					name: 'Nissan',
+					y: 0.91
+				}, {
+					name: 'Honda',
+					y: 0.2
+				}]
+			}]
+		});
+	//End
+	$('#bill4').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Báo cáo theo nhân viên bán hàng'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -45,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Doanh thu (Triệu)'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: 'Doanh thu: <b>{point.y:.1f} Triệu</b>'
+        },
+        series: [{
+            name: 'Doanh thu',
+            data: [
+                ['Nhân viên 1', 23.7],
+                ['Nhân viên 2', 16.1],
+                ['Nhân viên 3', 14.2],
+                ['Nhân viên 4', 14.0],
+                ['Nhân viên 5', 12.5],
+                ['Nhân viên 6', 12.1],
+                ['Nhân viên 7', 11.8],
+                ['Nhân viên 8', 11.7],
+                ['Nhân viên 9', 11.1],
+                ['Nhân viên 10', 11.1]
+            ],
+            dataLabels: {
+                enabled: true,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                format: '{point.y:.1f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        }]
+    });
 });	
 function generalSearch(){
 	var datetime = $('#datetime').val();
@@ -50,8 +169,8 @@ function generalSearch(){
 			$('#doanhthuTrongngay').html(obj.doanhthutrongngays);
 			$('#sovoiHomqua').html(obj.sovoihomquas);
 			$('#khachhang').html(obj.customers);
-			$('#chuaxuly').html(obj.chuaxuly);
-			$('#daxuly').html(obj.daxuly);
+			$('#baogia').html(obj.oders);
+			$('#nhacungcap').html(obj.oders);
 			$('#doanhthubanhang').html(obj.doanhthubanhang);
 		}
 	});
@@ -72,10 +191,10 @@ function searchBilling(){
 		contentType: false,   
 		success:function(datas){
 			var obj = $.evalJSON(datas); 
-			//$('#bill').html(obj.content);
-			//$('#bill2').html(obj.content2);
+			$('#bill').html(obj.content);
+			$('#bill2').html(obj.content2);
 			$('#bill3').html(obj.content3);
-			//$('#bill4').html(obj.content4);
+			$('#bill4').html(obj.content4);
 			$('#tongdoanhthu').html(obj.doanhthu);
 		}
 	});
@@ -189,15 +308,20 @@ function searchBilling(){
 	</div>
 	<div class=" col-md-6 mtop10 text-right" style="margin-bottom:10px;">
     	<div class="row">
-            <div class="col-md-4 colm3 col6 ">
-                
-            </div>
-            <div class="col-md-5 colm3 col6"  data-date-format="dd/mm/yyyy" style="display:inline-flex;">
-               <input style="float:left; text-align:center;" placeholder="Chọn ngày" type="text" id="datetime" placeholder="dd/mm/yyyy" name="datetime" class="form-control searchs" value="<?=$fromdates;?> - <?=$todates;?>" >
+			<div class="col-md-5 colm3 col6  branchids" ></div>
+            <div class="col-md-4 colm3 col6 " data-date-format="dd/mm/yyyy" style="display:inline-flex;">
+                <input style="float:left; text-align:center;" placeholder="Chọn ngày" type="text" id="datetime" placeholder="dd/mm/yyyy" name="datetime" class="form-control searchs" value="<?=$fromdates;?> - <?=$todates;?>" >
                 <span class="input-group-btn" >
                     <button class="btn default btn-picker" type="button"><i class="fa fa-calendar "></i></button>
                 </span>
-	  		</div>
+            </div>
+            <!--<div class="col-md-5 colm3 col6  branchids" >
+                <select id="branchid" name="branchid" class="combos">
+                	<?php foreach($branchs as $item){?>
+                    	<option value="<?=$item->id;?>"><?=$item->branch_name;?></option>
+                    <?php }?>
+                </select>
+	  		</div>-->
 			<div class="col-md-2 colm3 col12 mtop10mb">
             	<a id="search" class="btn btn-sm blue" href="#" style="background:#5bc0de;">
                		<i class="fa fa-search" aria-hidden="true"></i>	Tìm kiếm
@@ -228,7 +352,7 @@ function searchBilling(){
 						<div id="doanhthuTrongngay" class="number">0đ</div>
 						<div class="desc">Doanh thu trong ngày</div>
 						</div>
-						<a class="more" href="<?=base_url()?>reportpay.html">
+						<a class="more" href="<?=base_url()?>orderroomhistory.html">
 						Xem chi tết
 						<i class="m-icon-swapright m-icon-white"></i>
 						</a>
@@ -244,7 +368,7 @@ function searchBilling(){
 						<div id="sovoiHomqua" class="number">0đ</div>
 						<div class="desc"> So với hôm qua</div>
 						</div>
-						<a class="more" href="<?=base_url()?>reportpay.html">
+						<a class="more" href="<?=base_url()?>orderroomhistory.html">
 						Xem chi tết
 						<i class="m-icon-swapright m-icon-white"></i>
 						</a>
@@ -258,9 +382,41 @@ function searchBilling(){
 						</div>
 						<div class="details">
 						<div class="number" id="tongdoanhthu">0đ</div>
-						<div class="desc"> Doanh thu trong tháng</div>
+						<div class="desc"> Doanh thu trong tuần</div>
 						</div>
-						<a class="more" href="<?=base_url()?>reportpay.html">
+						<a class="more" href="<?=base_url()?>orderroomhistory.html">
+						Xem chi tết
+						<i class="m-icon-swapright m-icon-white"></i>
+						</a>
+					</div>
+				</div>
+				<!--S Item-->
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 dashboard-item">
+					<div class="dashboard-stat" style="background:#0090d9;">
+						<div class="visual">
+						<i class="fa fa-usd"></i>
+						</div>
+						<div class="details">
+						<div class="number" id="doanhthubanhang">0đ</div>
+						<div class="desc">Doanh thu trong tháng </div>
+						</div>
+						<a class="more" href="<?=base_url()?>#.html">
+						Xem chi tết
+						<i class="m-icon-swapright m-icon-white"></i>
+						</a>
+					</div>
+				</div>
+				<!--S Item-->
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 dashboard-item">
+					<div class="dashboard-stat" style="background:#0aa699;">
+						<div class="visual">
+						<i class="fa fa-line-chart"></i>
+						</div>
+						<div class="details">
+						<div class="number" id="baogia">1</div>
+						<div class="desc"> Đơn hàng</div>
+						</div>
+						<a class="more" href="<?=base_url()?>room.html">
 						Xem chi tết
 						<i class="m-icon-swapright m-icon-white"></i>
 						</a>
@@ -282,51 +438,16 @@ function searchBilling(){
 						</a>
 					</div>
 				</div>
-				<!--S Item-->
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 dashboard-item">
-					<div class="dashboard-stat" style="background:#0aa699;">
-						<div class="visual">
-						<i class="fa fa-line-chart"></i>
-						</div>
-						<div class="details">
-						<div class="number" id="chuaxuly"></div>
-						<div class="desc"> Yêu cầu chưa xử lý</div>
-						</div>
-						<a class="more" href="<?=base_url()?>ticket.html">
-						Xem chi tết
-						<i class="m-icon-swapright m-icon-white"></i>
-						</a>
-					</div>
-				</div>
-				<!--S Item-->
-				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 dashboard-item">
-					<div class="dashboard-stat" style="background:#0090d9;">
-						<div class="visual">
-						<i class="fa fa-usd"></i>
-						</div>
-						<div class="details">
-						<div class="number" id="daxuly"></div>
-						<div class="desc">Yêu cầu đã xử lý</div>
-						</div>
-						<a class="more" href="<?=base_url()?>ticket.html">
-						Xem chi tết
-						<i class="m-icon-swapright m-icon-white"></i>
-						</a>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 		<!--E Right-->
 	</div>
 </div>
-<!--<div class="row" style="margin-top:0px;">
+<div class="row" style="margin-top:0px;">
 	<div class="col-md-12">
-		<div class="col-md-4 text-left" id="bill4">
-			</div>	
-		<div class="col-md-4" id="bill" style="padding-right:0px;">
-		</div>
-		<div class="col-md-4"  id="bill2" style="padding-right:0px;">
-		</div>
+		<div class="col-md-12 text-left" id="bill4">
+		</div>	
 	</div>
-</div>-->
+</div>
 <div class="row" style="margin-top:20px;"></div>

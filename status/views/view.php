@@ -2,8 +2,10 @@
 	table col.c1 { width: 50px; }
 	table col.c2 { width: 50px; }
 	table col.c3 { width: 300px;}
-	table col.c4 { width: 70px;}
-	table col.c5 { width: auto;}
+	table col.c4 { width: 120px;}
+	table col.c5 { width: 120px;}
+	table col.c6 { width: 70px;}
+	table col.c7 { width: auto;}
 	.col-md-4{ white-space: nowrap !important;}
 </style>
 
@@ -65,13 +67,15 @@
 				<div id="cHeader">
 					<div id="tHeader">    	
 						<table id="tbheader" width="100%" cellspacing="0" border="1" >
-							<?php for($i=1; $i< 6; $i++){?>
+							<?php for($i=1; $i< 8; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr>							
 								<th><input type="checkbox" name="checkAll" id="checkAll" /></th>
 								<th><?=getLanguage('stt')?></th>		
 								<th id="ord_s.status_name"><?=getLanguage('trang-thai')?></th>
+								<th id="ord_s.color"><?=getLanguage('mau-chu')?></th>
+								<th id="ord_s.background"><?=getLanguage('hinh-nen')?></th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -83,7 +87,7 @@
 				<div id="data">
 					<div id="gridView">
 						<table id="tbbody" width="100%" cellspacing="0" border="1">
-							<?php for($i=1; $i < 6; $i++){?>
+							<?php for($i=1; $i < 8; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr class="row-search">
@@ -92,6 +96,8 @@
 								<td>
 									<input type="text" name="status_name" id="status_name" class="searchs form-control " />
 								</td>
+								<td></td>
+								<td></td>
 								<td></td>
 								<td></td>
 							</tr>
