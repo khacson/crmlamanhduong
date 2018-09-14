@@ -95,7 +95,7 @@
 								<th id="ord_tk.usercreate"><?=getLanguage('nguoi-yeu-cau');?></th>
 								<th id="ord_tk.customerid"><?=getLanguage('cong-ty');?></th>
 								<th id="ord_tk.reply_result"><?=getLanguage('trang-thai');?></th>
-								<th id="ord_tk.reply_date"><?=getLanguage('ngay-xu-ly');?></th>
+								<th id="ord_tk.reply_date"><?=getLanguage('ngay-tra-loi');?></th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -205,6 +205,24 @@
   </div>
 </div>
 <!--E feedback -->
+<!--S myModalFromReply -->
+<div id="myModalFromReply" class="modal fade" role="dialog">
+  <div class="modal-dialog w500">
+    <!-- Modal content-->
+    <div class="modal-content ">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="modalTitleFromReply">Trả lời</h4>
+      </div>
+      <div id="loadContentFromReply" class="modal-body"></div>
+      <div class="modal-footer">
+        <button id="close" type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> <?=getLanguage('dong');?></button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--E myModalFromReply -->
+
 <!-- view Img -->
 <div id="viewImg-form" style="display:none;"><div class=""><div id="viewImg-form-gridview" ></div></div></div>
 <!-- view Img -->
@@ -341,6 +359,19 @@
 				var obj = $.evalJSON(datas); 
 				$('#modalTitleFromFeedback').html(obj.title);
 				$('#loadContentFromFromFeedback').html(obj.content);
+				$('#id').html(obj.id);
+			}
+		});
+	}
+	function loadFormReply(id){
+		$.ajax({
+			url : controller + 'reply',
+			type: 'POST',
+			async: false,
+			data:{id:id},  
+			success:function(datas){
+				var obj = $.evalJSON(datas); 
+				$('#loadContentFromReply').html(obj.content);
 				$('#id').html(obj.id);
 			}
 		});
@@ -491,12 +522,13 @@
 				loadFormFeedback(id);
 			});
 		});
-		$(".viewImg").each(function(e) {
-			$(this).click(function() {
+		$('.reply').each(function(e){
+			$(this).click(function(){
 				var id = $(this).attr('id');
-				viewImg(id);
+				loadFormReply(id);
 			});
 		});
+		loadContentFromReply
 	}
 	function refresh(){
 		$('.loading').show();

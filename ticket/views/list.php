@@ -14,7 +14,7 @@ foreach ($datas as $key => $item) {
 	//Tinh trang
 	$color = $item->color;
 	$background = $item->background;
-	$reply_result = '<a class="btn '.$background.' radius8" style="padding:0 3px;">'.$item->status_name .'</a>';
+	$reply_result = '<a id="'.$id.'" href="#" class="btn '.$background.' radius8 reply" style="padding:0 3px;" href="#" data-toggle="modal" data-target="#myModalFromReply">'.$item->status_name .'</a>';
 		
 	$reply_datetime = '';
 	if(!empty($item->reply_datetime)){
@@ -36,7 +36,12 @@ foreach ($datas as $key => $item) {
 		<td class="text-center"><?=$reply_result;?></td>
 		<td class="text-center"><?=$reply_datetime;?></td>
 		<td class="text-center">
-			<?php if(isset($permission['edit'])){?>
+			<?php if(isset($permission['feedback'])){?>
+				<a id="<?=$id;?>" title="Đánh giá" class="btn btn-info feedback btn-icon2" href="#" data-toggle="modal" data-target="#myModalFromFeedback">
+				<i class="fa fa-envelope-o" aria-hidden="true"></i>
+				</a>
+			<?php }?>
+			<?php if(isset($permission['edit']) && $item->reply_status == 1){?>
 				<a id="<?=$id;?>" class="btn btn-info edititem btn-icon2" href="#" data-toggle="modal" data-target="#myModalFrom">
 				<i class="fa fa-pencil" aria-hidden="true"></i>
 				</a>
@@ -44,11 +49,6 @@ foreach ($datas as $key => $item) {
 			<?php if(isset($permission['delete'])){?>
 				<a id="<?=$id;?>" class="btn btn-danger deleteitem btn-icon2" href="#" data-toggle="modal" data-target="#myModal">
 				<i class="fa fa-times" aria-hidden="true"></i>
-				</a>
-			<?php }?>
-			<?php if(isset($permission['feedback']) && $item->reply_result != 0){?>
-				<a id="<?=$id;?>" title="Đánh giá" class="btn btn-info feedback btn-icon2" href="#" data-toggle="modal" data-target="#myModalFromFeedback">
-				<i class="fa fa-envelope-o" aria-hidden="true"></i>
 				</a>
 			<?php }?>
 		</td>

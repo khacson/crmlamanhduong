@@ -80,12 +80,12 @@ foreach ($datas as $key => $item) {
 			?>
 		</td>
 		<td class="text-center">
-			<?php if(isset($permission['feedback']) && $item->reply_result != 0){?>
+			<?php if(isset($permission['feedback'])){?>
 				<a id="<?=$id;?>" title="Đánh giá" class="btn btn-info feedback btn-icon2" href="#" data-toggle="modal" data-target="#myModalFromFeedback">
 				<i class="fa fa-envelope-o" aria-hidden="true"></i>
 				</a>
 			<?php }?>
-			<?php if(isset($permission['edit'])){?>
+			<?php if(isset($permission['edit']) && $item->reply_status == 1){?>
 				<a id="<?=$id;?>" class="btn btn-info edititem btn-icon2" href="#" data-toggle="modal" data-target="#myModalFrom">
 				<i class="fa fa-pencil" aria-hidden="true"></i>
 				</a>

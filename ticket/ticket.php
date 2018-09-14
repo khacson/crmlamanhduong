@@ -70,6 +70,21 @@ class Ticket extends CI_Controller {
 		$result->id = $id;
         echo json_encode($result); exit;
 	}
+	function reply(){
+		$login = $this->login;
+		$id = $this->input->post('id');
+		$find = $this->model->findID($id);
+		if(empty($find->id)){
+			$tbs = $this->base_model->loadTable();
+			$find = $this->base_model->getColumns($tbs['crmd_ticket']);
+		}
+		$data = new stdClass();
+        $result = new stdClass();
+		$data->finds = $find;  
+        $result->content = $this->load->view('reply', $data, true);
+		$result->id = $id;
+        echo json_encode($result); exit;
+	}
 	function feedback(){
 		$login = $this->login;
 		$id = $this->input->post('id');
