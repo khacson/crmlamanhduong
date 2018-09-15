@@ -3,24 +3,16 @@
 	table col.c2 { width: 50px; }
 	table col.c3 { width: 100px;}
 	table col.c4 { width: 180px;}
-	table col.c5 { width: 110px;}
-	table col.c6 { width: 250px;}
+	table col.c5 { width: 120px;}
+	table col.c6 { width: 120px;}
 	table col.c7 { width: 130px;}
 	table col.c8 { width: 120px;}
 	table col.c9 { width: 120px;}
 	table col.c10 { width: 120px;}
-	table col.c11 { width: 120px;}
-	table col.c12 { width: 180px;}
-	table col.c13 { width: 130px;}
-	table col.c14 { width: 120px;}
-	table col.c15 { width: 150px;}
-	table col.c16 { width: 250px;}
-	table col.c17 { width: 100px;}
-	table col.c18 { width: auto;}
+	table col.c11 { width: 80px;}
+	table col.c12 { width: auto;}
 	.col-md-4{ white-space: nowrap !important;}
 </style>
-<script type="text/javascript" src="<?=url_tmpl();?>fancybox/source/jquery.fancybox.pack.js"></script>  
-<link href="<?=url_tmpl();?>fancybox/source/jquery.fancybox.css" rel="stylesheet" />
 <link type="text/css" href="<?=url_tmpl();?>css/daterangepicker.css"  rel="stylesheet">	
 <script type="text/javascript" src="<?=url_tmpl();?>js/moment.js"></script>
 <script type="text/javascript" src="<?=url_tmpl();?>js/daterangepicker.js"></script>
@@ -88,7 +80,7 @@
 				<div id="cHeader">
 					<div id="tHeader">    	
 						<table id="tbheader" width="100%" cellspacing="0" border="1" >
-							<?php for($i=1; $i< 19; $i++){?>
+							<?php for($i=1; $i< 13; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr>							
@@ -97,17 +89,11 @@
 								<th id="ord_tk.ticket_code"><?=getLanguage('ma-yeu-cau');?></th>
 								<th id="ord_tk.ticket_name"><?=getLanguage('yeu-cau');?></th>
 								<th id="ord_tk.priorityid"><?=getLanguage('do-uu-tien');?></th>
-								<th id="ord_tk.ticket_description"><?=getLanguage('noi-dung-yeu-cau');?></th>
-								<th><?=getLanguage('hinh-anh');?></th>
 								<th id="ord_tk.datecreate"><?=getLanguage('ngay-yeu-cau');?></th>
 								<th id="ord_tk.usercreate"><?=getLanguage('nguoi-yeu-cau');?></th>
-								<th id="ord_tk.ticket_contat_name"><?=getLanguage('nguoi-lien-he');?></th>
-								<th id="ord_tk.ticket_contact_phone"><?=getLanguage('dien-thoai');?></th>
 								<th id="ord_tk.customerid"><?=getLanguage('cong-ty');?></th>
 								<th id="ord_tk.reply_result"><?=getLanguage('trang-thai');?></th>
 								<th id="ord_tk.reply_status"><?=getLanguage('tinh-trang');?> Ticket</th>
-								<th id="ord_tk.reply_description"><?=getLanguage('ghi-chu');?></th>
-								<th><?=getLanguage('phan-hoi-khach-hang')?></th>
 								<th></th>
 								<th></th>
 							</tr>
@@ -119,7 +105,7 @@
 				<div id="data">
 					<div id="gridView">
 						<table id="tbbody" width="100%" cellspacing="0" border="1">
-							<?php for($i=1; $i < 19; $i++){?>
+							<?php for($i=1; $i < 13; $i++){?>
 								<col class="c<?=$i;?>">
 							<?php }?>
 							<tr class="row-search">
@@ -139,10 +125,6 @@
 									</select>
 								</td>
 								<td>
-									<input type="text" name="ticket_description" id="ticket_description" class="searchs" />
-								</td>
-								<td></td>
-								<td>
 									<div class="col-md-12" data-date-format="dd/mm/yyyy" style="display:inline-flex; padding-left:0; padding-right:25px;">
 										<input style="float:left; text-align:center;" placeholder="Chọn ngày" type="text" id="datecreate" placeholder="dd/mm/yyyy" name="datecreate" class="form-control searchs" value="" >
 										<span class="input-group-btn" >
@@ -154,10 +136,6 @@
 								<td>
 									<input type="text" name="ticket_contat_name" id="ticket_contat_name" class="searchs" />
 								</td>
-								<td>
-									<input type="text" name="ticket_contact_phone" id="ticket_contact_phone" class="searchs" />
-								</td>
-								<td></td>
 								<td>
 									<select id="reply_result" name="reply_result" class="combos">
 										<?php foreach($statuss as $item){?>
@@ -171,7 +149,6 @@
 										<option value="2">Đóng</option>
 									</select>
 								</td>
-								<td></td>
 								<td></td>
 								<td></td>
 							</tr>
@@ -525,12 +502,6 @@
 			$(this).click(function(){
 				var id = $(this).attr('id');
 				loadFormFeedback(id);
-			});
-		});
-		$(".viewImg").each(function(e) {
-			$(this).click(function() {
-				var id = $(this).attr('id');
-				viewImg(id);
 			});
 		});
 	}

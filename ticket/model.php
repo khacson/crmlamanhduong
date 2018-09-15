@@ -31,7 +31,7 @@
 		if(!empty($search['priorityid'])){
 			$sql.= " and tk.priorityid in (".$search['priorityid'].") ";	
 		}
-		if(!empty($search['reply_result'] != '')){
+		if(!empty($search['reply_result'])){
 			$sql.= " and tk.reply_result in (".$search['reply_result'].") ";	
 		}
 		if(!empty($search['usercreate'])){

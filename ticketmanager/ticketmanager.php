@@ -4,7 +4,7 @@
  * @author  
  * @copyright 2018
  */
-class Ticket extends CI_Controller {
+class Ticketmanager extends CI_Controller {
     private $route;
 	private $login;
 	function __construct(){
@@ -63,8 +63,9 @@ class Ticket extends CI_Controller {
 		else{
 			$result->title = getLanguage('sua');
 		}
+		$data->prioritys = $this->model->getPriority($find->priorityid);
 		$data->permission = $this->base_model->getPermission($this->login, $this->route);
-		$data->prioritys = $this->base_model->getPriority();
+		//$data->prioritys = $this->base_model->getPriority();
 		$data->companyid = $login->companyid;
         $result->content = $this->load->view('form', $data, true);
 		$result->id = $id;

@@ -43,7 +43,7 @@ class Ticket extends CI_Controller {
 		$data->statuss = $this->base_model->getStatus();
 		$content = $this->load->view('view',$data,true);
 		$this->site->write('content',$content,true);
-		$this->site->write('title',getLanguage('quan-ly-ticket'),true);
+		$this->site->write('title',getLanguage('tao-ticket'),true);
         $this->site->render();
 	}
 	function form(){
@@ -156,7 +156,7 @@ class Ticket extends CI_Controller {
 		$array['ticket_image']  = $ticket_image;
 		$result['status'] =$this->model->saves($array);
 		$description = getLanguage('them-moi').': '.$array['ticket_code'];
-		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),'','',$description);
+		$this->base_model->addAcction(getLanguage('tao-ticket'),$this->uri->segment(2),'','',$description);
 		$result['csrfHash'] = $token;
 		echo json_encode($result);
 	}
@@ -183,7 +183,7 @@ class Ticket extends CI_Controller {
 		
 		$result['status'] = 1;
 		$description = getLanguage('phan-hoi').': '.$array['ticket_code'];
-		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),'','',$description);
+		$this->base_model->addAcction(getLanguage('tao-ticket'),$this->uri->segment(2),'','',$description);
 		$result['csrfHash'] = $token;
 		echo json_encode($result);
 	}
@@ -217,7 +217,7 @@ class Ticket extends CI_Controller {
 		$result['status'] =$this->model->edits($array,$id);
 		$arr_log['func'] = $this->uri->segment(2);
 		$description = getLanguage('sua').': '.$acction_before->ticket_code;
-		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),json_encode($acction_before),json_encode($array),$description);
+		$this->base_model->addAcction(getLanguage('tao-ticket'),$this->uri->segment(2),json_encode($acction_before),json_encode($array),$description);
 		
 		$result['csrfHash'] = $token;
 		echo json_encode($result);
@@ -246,7 +246,7 @@ class Ticket extends CI_Controller {
 		$result['status'] = $this->model->edits($arrays,$id);
 		$arr_log['func'] = $this->uri->segment(2);
 		$description = getLanguage('tra-loi').': '.$acction_before->ticket_code;
-		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),json_encode($acction_before),json_encode($array),$description);
+		$this->base_model->addAcction(getLanguage('tao-ticket'),$this->uri->segment(2),json_encode($acction_before),json_encode($array),$description);
 		
 		$result['csrfHash'] = $token;
 		echo json_encode($result);
@@ -277,7 +277,7 @@ class Ticket extends CI_Controller {
 		}
 		
 		$description = getLanguage('xoa').": ".$find->ticket_code;
-		$this->base_model->addAcction(getLanguage('quan-ly-ticket'),$this->uri->segment(2),'','',$description);
+		$this->base_model->addAcction(getLanguage('tao-ticket'),$this->uri->segment(2),'','',$description);
 		
 		$this->model->table($tb['crmd_ticket'])
 					->where("id in ($id)")

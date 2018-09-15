@@ -3,7 +3,7 @@
  * @author 
  * @copyright 2018
  */
- class TicketModel extends CI_Model{
+ class TicketmanagerModel extends CI_Model{
 	function __construct(){
 		parent::__construct();
 		$this->login = $this->site->getSession('login');
@@ -11,6 +11,22 @@
 	function findID($id){
 		$tb = $this->base_model->loadTable();
 		$query = $this->model->table($tb['crmd_ticket'])
+					  ->select('*')
+					  ->where('id',$id)
+					  ->find();
+		return $query;
+	}
+	function getStatus($id){
+		$tb = $this->base_model->loadTable();
+		$query = $this->model->table($tb['crmd_status'])
+					  ->select('*')
+					  ->where('id',$id)
+					  ->find();
+		return $query;
+	}
+	function getPriority($id){
+		$tb = $this->base_model->loadTable();
+		$query = $this->model->table($tb['crmd_priority'])
 					  ->select('*')
 					  ->where('id',$id)
 					  ->find();
@@ -58,7 +74,7 @@
 	function getList($search,$page,$rows){
 		$tb = $this->base_model->loadTable();
 		$searchs = $this->getSearch($search);
-		$sql = "SELECT tk.*, pt.priority_name, c.customer_name, st.status_name
+		$sql = "SELECT tk.*, pt.priority_name, c.customer_name, st.status_name, st.status_name, st.color, st.background
 				FROM `".$tb['crmd_ticket']."` AS tk
 				LEFT JOIN `".$tb['crmd_priority']."` AS pt on pt.id = tk.priorityid
 				LEFT JOIN `".$tb['crmd_status']."` AS st on st.id = tk.reply_result
